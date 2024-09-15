@@ -22,7 +22,6 @@ export const SelectImagesDialog = ({
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [selectedImage, setSelectedImage] = useState<string>(value);
-  const [isImageChoosen, setIsImageChoosen] = useState<boolean>(false);
 
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
@@ -47,9 +46,6 @@ export const SelectImagesDialog = ({
   };
 
   const handleSelectImageBtnClick = () => {
-    if (isImageChoosen) {
-      return setIsDialogOpen(true);
-    }
     closeDialog();
   };
   return (
@@ -76,12 +72,11 @@ export const SelectImagesDialog = ({
         endpoint="productImage"
         onClientUploadComplete={() => {
           void refetch();
-          setIsImageChoosen(true);
+
           toast({
             title: "Success",
             description: "Upload Completed",
           });
-          setIsImageChoosen(false);
         }}
         onUploadError={(error: Error) => {
           toast({
@@ -95,7 +90,6 @@ export const SelectImagesDialog = ({
           console.log("Uploading: ", name);
         }}
         onChange={(acceptedFiles) => {
-          setIsImageChoosen(true);
           console.log(acceptedFiles);
         }}
       />

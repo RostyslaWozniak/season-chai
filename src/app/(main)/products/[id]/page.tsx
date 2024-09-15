@@ -1,11 +1,12 @@
+import { CategoriesView } from "@/components/products/CategoriesView";
 import { InfoCard } from "@/components/products/InfoCard";
-import { OthersCategories } from "@/components/products/OthersCategories";
+
 import { RelatedProducts } from "@/components/products/RelatedProducts";
 import { api } from "@/trpc/server";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const { id } = params;
-  const product = await api.product.getOne({ id });
+  const product = await api.public.products.getOne({ id });
 
   return {
     title: `${product.name}`,
@@ -18,8 +19,10 @@ export default async function ProductItemPage({
 }: {
   params: { id: string };
 }) {
-  const product = await api.product.getOne({ id: params.id });
+  const product = await api.public.products.getOne({ id: params.id });
   if (!product) throw new Error("Product not found");
+
+  const categories = await api.public.categories.getAllCategories();
 
   console.log(product);
   return (
@@ -27,10 +30,10 @@ export default async function ProductItemPage({
       <InfoCard product={product} />
       <div className="grid w-full grid-cols-5 gap-20">
         <div className="col-span-4">
-          <RelatedProducts category={product.category} id={product.id} />
+          <RelatedProducts categoryId={product.category.id} id={product.id} />
         </div>
         <div className="col-span-1">
-          <OthersCategories />
+          <CategoriesView categories={categories} />
         </div>
       </div>
     </div>

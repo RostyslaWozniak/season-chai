@@ -1,8 +1,17 @@
+"use client";
 import IconMenu from "@/components/IconMenu";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Home, Image, Package, ShoppingCart, Users } from "lucide-react";
+import {
+  Home,
+  Image,
+  Package,
+  Settings,
+  ShoppingCart,
+  Users,
+} from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const sidebarItems = [
   {
@@ -30,20 +39,36 @@ const sidebarItems = [
     label: "Images",
     icon: Image,
   },
+  {
+    href: "/dashboard/settings",
+    label: "Settings",
+    icon: Settings,
+  },
 ];
 
 export const Sidebar = () => {
+  const pathname = usePathname();
   return (
     <aside className="relative min-w-min">
       <nav className="sticky top-20 space-y-8 pr-4">
         <div>
-          <h2 className="mb-2 text-xs uppercase">Menu</h2>
+          <h2 className="mb-2 text-xs uppercase">menu</h2>
           <ul className="space-y-2">
             {sidebarItems.map(({ href, label, icon: Icon }) => (
-              <li key={href}>
+              <li
+                key={href}
+                className={cn("", {
+                  "mt-2 border-t-2 pt-2 text-muted-foreground":
+                    label === "Settings",
+                })}
+              >
                 <Link
                   href={href}
-                  className={cn(buttonVariants({ variant: "ghost" }))}
+                  className={cn(
+                    buttonVariants({
+                      variant: pathname === href ? "secondary" : "ghost",
+                    }),
+                  )}
                 >
                   <IconMenu
                     icon={Icon}

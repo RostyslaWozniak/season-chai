@@ -7,21 +7,20 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { formatPrice } from "@/helpers";
+import { formatPrice, slugifyString } from "@/helpers";
 import { DropdownWrapper } from "@/components/DropdownWrapper";
 import IconMenu from "@/components/IconMenu";
 import { InfoIcon, ShoppingCart } from "lucide-react";
-import { type PublicProduct } from "@/types";
 import { DialogWrapper } from "../DialogWrapper";
 import { InfoCard } from "./InfoCard";
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { categoryToClient, categoryToSlug } from "@/helpers/category";
 import { TagLink } from "../TagLink";
+import { type PublicProductWithCategory } from "@/server/helpers/public";
 
 type ProductCardProps = {
-  product: PublicProduct;
+  product: PublicProductWithCategory;
 };
 
 export const ProductCard = ({ product }: ProductCardProps) => {
@@ -43,13 +42,13 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           <Image
             width={400}
             height={400}
-            src={product.imageUrl}
+            src={product.image_url}
             alt={product.name}
             className="aspect-square w-full object-cover"
           />
           <TagLink
-            path={`/products?q=${categoryToSlug(product.category)}`}
-            label={categoryToClient(product.category)}
+            path={`/products?q=${slugifyString(product.category.name)}`}
+            label={product.category.name}
             className="absolute left-2 top-2"
           />
           <div className="absolute right-2 top-2">

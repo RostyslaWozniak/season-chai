@@ -1,8 +1,7 @@
-import { productRouter } from "@/server/api/routers/product";
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
-import { usersRouter } from "./routers/users";
 import { adminRouter } from "./routers/admin";
 import { uploadFilesRouter } from "./routers/uploadFiles";
+import { publicRouter } from "./routers/public";
 
 /**
  * This is the primary router for your server.
@@ -10,9 +9,9 @@ import { uploadFilesRouter } from "./routers/uploadFiles";
  * All routers added in /api/routers should be manually added here.
  */
 export const appRouter = createTRPCRouter({
-  product: productRouter,
-  users: usersRouter,
   admin: adminRouter,
+  public: publicRouter,
+
   uploadFiles: uploadFilesRouter,
 });
 

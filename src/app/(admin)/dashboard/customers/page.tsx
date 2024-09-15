@@ -1,4 +1,4 @@
-import { CustomersList } from "../../_components/CustomersList";
+import { CustomersList } from "./CustomersList";
 import { type Metadata } from "next";
 
 export const metadata: Metadata = {

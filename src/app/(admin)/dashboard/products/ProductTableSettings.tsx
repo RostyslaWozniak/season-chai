@@ -12,13 +12,15 @@ import { useState } from "react";
 import { ProductForm } from "./ProductForm";
 import { DeleteProductButton } from "./DeleteProductButton";
 import { type AdminProduct } from "@/types";
-import { AdminInfoCard } from "./AdminInfoCard";
+import { AdminInfoCard } from "../../_components/AdminInfoCard";
 
-type TableRowsSettings = {
+type ProductTableSettingsProps = {
   product: AdminProduct;
 };
 
-export const TableRowSettings = ({ product }: TableRowsSettings) => {
+export const ProductTableSettings = ({
+  product,
+}: ProductTableSettingsProps) => {
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -41,7 +43,7 @@ export const TableRowSettings = ({ product }: TableRowsSettings) => {
         setIsOpen={setIsEditOpen}
         className="flex w-[700px] justify-end gap-3"
       >
-        <ProductForm product={product} setIsEditOpen={setIsEditOpen} />
+        <ProductForm product={product} setIsOpen={setIsEditOpen} />
       </DialogWrapper>
       <DialogWrapper
         title="Delete Product"

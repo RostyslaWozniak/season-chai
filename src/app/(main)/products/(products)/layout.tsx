@@ -19,7 +19,7 @@ export default async function RootLayout({
           </div>
         </div>
       </section>
-      {children}
+      <div className="relative min-h-[400px]">{children}</div>
     </>
   );
 }

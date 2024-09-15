@@ -23,7 +23,7 @@ export default async function AdminLayout({
   return (
     <div className="container relative mx-auto flex min-h-[calc(100vh-240px)] max-w-7xl grow justify-between">
       <Sidebar />
-      <div className="grow px-10 py-5">{children}</div>
+      <div className="relative grow px-10 py-5">{children}</div>
     </div>
   );
 }

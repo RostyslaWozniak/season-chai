@@ -1,7 +1,12 @@
 "use client";
 import { Calendar, Clock, Package } from "lucide-react";
-import { type AdminProduct } from "@/types";
-import { formatPrettyDate, formatPrettyTime, formatPrice } from "@/helpers";
+
+import {
+  formatPrettyDate,
+  formatPrettyTime,
+  formatPrice,
+  slugifyString,
+} from "@/helpers";
 import IconMenu from "@/components/IconMenu";
 import { cn } from "@/lib/utils";
 import {
@@ -11,16 +16,20 @@ import {
 
 import Image from "next/image";
 import { TagLink } from "@/components/TagLink";
-import { categoryToClient, categoryToSlug } from "@/helpers/category";
+import { type AdminProductWithCategory } from "@/server/helpers/admin";
 
-export const AdminInfoCard = ({ product }: { product: AdminProduct }) => {
+export const AdminInfoCard = ({
+  product,
+}: {
+  product: AdminProductWithCategory;
+}) => {
   return (
     <div className="grid grid-cols-3 gap-8">
       <Image
         width={400}
         height={400}
         className="rounded-lg object-cover shadow-md"
-        src={product.imageUrl}
+        src={product.image_url}
         alt={`Cover image of ${product.name}`}
       />
 
@@ -30,8 +39,8 @@ export const AdminInfoCard = ({ product }: { product: AdminProduct }) => {
         </h1>
 
         <TagLink
-          path={`/products?q=${categoryToSlug(product.category)}`}
-          label={categoryToClient(product.category)}
+          path={`/products?q=${slugifyString(product.category.name)}`}
+          label={product.category.name}
         />
 
         <p className="mt-2 text-lg text-muted-foreground">

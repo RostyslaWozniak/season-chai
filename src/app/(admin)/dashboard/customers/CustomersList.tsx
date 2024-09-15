@@ -12,7 +12,7 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { User } from "lucide-react";
 
 export const CustomersList = async () => {
-  const users = await api.admin.getAllUsers();
+  const users = await api.admin.users.getAllUsers();
   return (
     <Card>
       <CardHeader>

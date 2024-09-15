@@ -21,7 +21,9 @@ export default async function RootLayout({
           <SessionProvider value={session}>
             <div className="flex min-h-screen flex-col">
               <Header />
-              <main className="w-screen grow pt-20">{children}</main>
+              <main className="flex w-screen grow flex-col pt-20">
+                {children}
+              </main>
               <Toaster />
             </div>
           </SessionProvider>

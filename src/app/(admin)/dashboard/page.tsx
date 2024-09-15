@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminPage() {
-  const data = await api.admin.getSalesData();
+  const data = await api.admin.data.getSalesData();
 
   return (
     <div className="space-y-10">

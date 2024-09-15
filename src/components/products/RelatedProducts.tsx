@@ -1,5 +1,4 @@
 import { api } from "@/trpc/server";
-import { type Category } from "@prisma/client";
 import { Card, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
 import { ShoppingCartIcon } from "lucide-react";
@@ -8,14 +7,14 @@ import { formatPrice } from "@/helpers";
 import Link from "next/link";
 
 export const RelatedProducts = async ({
-  category,
+  categoryId,
   id,
 }: {
-  category: Category;
+  categoryId: string;
   id: string;
 }) => {
-  const products = await api.product.getRelatedProducts({
-    category,
+  const products = await api.public.products.getRelatedProducts({
+    categoryId,
     take: 2,
     id,
   });
@@ -28,17 +27,14 @@ export const RelatedProducts = async ({
 
       <div className="grid grid-cols-2 gap-4">
         {products
-          .filter((product) => product.category === category)
+          // .filter((product) => product.category === category)
           .map((product) => (
             <Link key={product.id} href={`/products/${product.id}`}>
-              <Card
-                key={product.category}
-                className="grid h-full grid-cols-3 overflow-hidden duration-300 hover:shadow-md"
-              >
+              <Card className="grid h-full grid-cols-3 overflow-hidden duration-300 hover:shadow-md">
                 <Image
                   width={150}
                   height={200}
-                  src={product.imageUrl}
+                  src={product.image_url}
                   alt={product.name}
                   className="h-full object-cover"
                 />

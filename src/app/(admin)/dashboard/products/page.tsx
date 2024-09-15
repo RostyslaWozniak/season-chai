@@ -1,5 +1,5 @@
 import { OverviewCards } from "@/components/OverviewCards";
-import { ProductList } from "../../_components/ProductList";
+import { ProductList } from "./ProductList";
 import { api } from "@/trpc/server";
 import {
   CalendarArrowDown,
@@ -7,7 +7,7 @@ import {
   Package,
   Warehouse,
 } from "lucide-react";
-import { CreateNewProduct } from "../../_components/CreateNewProduct";
+import { CreateNewProduct } from "./CreateNewProduct";
 
 import { type Metadata } from "next";
 
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 export default async function ProductsListPage() {
   const { totalProducts, totalStock, minStock, maxStock } =
-    await api.admin.getOverview();
+    await api.admin.data.getOverview();
   const overviewData = [
     {
       title: "Total Products",

@@ -11,7 +11,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import {
-  CATEGORIES,
   adminCreateProductSchema,
   type AdminCreateProductSchema,
 } from "@/lib/validation/product";
@@ -33,16 +32,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { LeafLoader } from "@/components/Loaders";
 import { cn } from "@/lib/utils";
-import { type AdminProduct } from "@/types";
+import { FormButton } from "../../_components/FormButton";
+import { type AdminProductWithCategory } from "@/server/helpers/admin";
 
 type ProductFormProps = {
-  product?: AdminProduct;
-  setIsEditOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  product?: AdminProductWithCategory;
 };
 
-export const ProductForm = ({ product, setIsEditOpen }: ProductFormProps) => {
+export const ProductForm = ({ product, setIsOpen }: ProductFormProps) => {
   const [isUploadImagesDialogOpen, setIsUploadImagesDialogOpen] =
     useState(false);
 
@@ -55,19 +54,22 @@ export const ProductForm = ({ product, setIsEditOpen }: ProductFormProps) => {
       description: product?.description ?? "",
       price: product?.price ?? 0,
       stock: product?.stock ?? 0,
-      imageUrl: product?.imageUrl ?? "",
-      category: product?.category ?? undefined,
+      image_url: product?.image_url ?? "",
+      category: product?.category.name ?? "",
     },
   });
 
+  const utils = api.useUtils();
+
   const { mutate: createProduct, isPending: isCreating } =
-    api.admin.createProduct.useMutation({
+    api.admin.products.createProduct.useMutation({
       onSuccess: () => {
         toast({
           title: "Success",
           description: "Product created successfully",
         });
         form.reset();
+        void utils.admin.products.getAllProducts.invalidate();
       },
       onError: (error) => {
         toast({
@@ -79,13 +81,15 @@ export const ProductForm = ({ product, setIsEditOpen }: ProductFormProps) => {
     });
 
   const { mutate: updateProduct, isPending: isUpdating } =
-    api.admin.updateProduct.useMutation({
+    api.admin.products.updateProduct.useMutation({
       onSuccess: () => {
         toast({
           title: "Success",
           description: "Product updated successfully",
         });
         form.reset();
+
+        void utils.admin.products.getAllProducts.invalidate();
       },
       onError: (error) => {
         toast({
@@ -96,13 +100,15 @@ export const ProductForm = ({ product, setIsEditOpen }: ProductFormProps) => {
       },
     });
 
+  const { data: categories } = api.admin.categories.getAllCategories.useQuery();
+
   function onSubmit(values: AdminCreateProductSchema) {
     if (product) {
       updateProduct({ ...values, id: product.id });
-      if (setIsEditOpen) setIsEditOpen(false);
     } else {
       createProduct(values);
     }
+    setIsOpen(false);
   }
 
   return (
@@ -159,9 +165,9 @@ export const ProductForm = ({ product, setIsEditOpen }: ProductFormProps) => {
                     <SelectContent {...field}>
                       <SelectGroup>
                         <SelectLabel>Category</SelectLabel>
-                        {CATEGORIES.map((item) => (
-                          <SelectItem key={item} value={item}>
-                            {item.replace("_", " ").toLowerCase()}
+                        {(categories ?? []).map(({ id, name }) => (
+                          <SelectItem key={id} value={name}>
+                            {name}
                           </SelectItem>
                         ))}
                       </SelectGroup>
@@ -215,7 +221,7 @@ export const ProductForm = ({ product, setIsEditOpen }: ProductFormProps) => {
           {/* productImage */}
           <FormField
             control={form.control}
-            name="imageUrl"
+            name="image_url"
             render={({ field }) => (
               <FormItem className="relative flex flex-col items-start gap-2">
                 <FormLabel>Image*</FormLabel>
@@ -263,21 +269,10 @@ export const ProductForm = ({ product, setIsEditOpen }: ProductFormProps) => {
             )}
           />
         </div>
-        <Button
-          className="flex w-20 items-center justify-center self-end justify-self-end"
-          type="submit"
-        >
-          {isCreating || isUpdating ? (
-            <LeafLoader
-              className="translate-y-0.5 text-primary-foreground"
-              size={15}
-            />
-          ) : product ? (
-            "Save"
-          ) : (
-            "Create"
-          )}
-        </Button>
+        <FormButton
+          isLoading={isCreating || isUpdating}
+          label={product ? "Save" : "Create"}
+        />
       </form>
     </Form>
   );

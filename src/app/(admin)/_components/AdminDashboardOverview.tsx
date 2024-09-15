@@ -4,7 +4,7 @@ import { Package, Users, ShoppingCart, DollarSign } from "lucide-react";
 
 export const AdminDashboardOverview = async () => {
   const { totalProducts, totalCustomers, totalOrders, totalRevenue } =
-    await api.admin.getOverview();
+    await api.admin.data.getOverview();
 
   const overviewData = [
     {

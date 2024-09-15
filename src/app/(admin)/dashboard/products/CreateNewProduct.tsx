@@ -8,19 +8,19 @@ import { PackagePlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const CreateNewProduct = () => {
-  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <>
       <DialogWrapper
         title="Edit Product"
         description="Make changes to your product here. Do not forget to save changes."
-        isOpen={isEditOpen}
-        setIsOpen={setIsEditOpen}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
         className="flex w-[700px] justify-end gap-3"
       >
-        <ProductForm setIsEditOpen={setIsEditOpen} />
+        <ProductForm setIsOpen={setIsOpen} />
       </DialogWrapper>
-      <Button onClick={() => setIsEditOpen(true)}>
+      <Button onClick={() => setIsOpen(true)}>
         <IconMenu
           icon={PackagePlusIcon}
           text="Create New Product"

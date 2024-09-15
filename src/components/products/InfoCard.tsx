@@ -1,13 +1,16 @@
 "use client";
 import { ShoppingCart } from "lucide-react";
-import { type PublicProduct } from "@/types";
-import { formatPrice } from "@/helpers";
+import { formatPrice, slugifyString } from "@/helpers";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { TagLink } from "../TagLink";
-import { categoryToClient, categoryToSlug } from "@/helpers/category";
+import { type PublicProductWithCategory } from "@/server/helpers/public";
 
-export const InfoCard = ({ product }: { product: PublicProduct }) => {
+export const InfoCard = ({
+  product,
+}: {
+  product: PublicProductWithCategory;
+}) => {
   return (
     <div className="grid grid-cols-5 gap-8 py-4">
       <div className="col-span-2 flex aspect-square w-full items-center justify-center">
@@ -15,7 +18,7 @@ export const InfoCard = ({ product }: { product: PublicProduct }) => {
           width={500}
           height={500}
           className="rounded-lg object-cover"
-          src={product.imageUrl ?? ""}
+          src={product.image_url ?? ""}
           alt={`Cover image of ${product.name}`}
         />
       </div>
@@ -26,8 +29,8 @@ export const InfoCard = ({ product }: { product: PublicProduct }) => {
         </h1>
 
         <TagLink
-          path={`/products?q=${categoryToSlug(product.category)}`}
-          label={categoryToClient(product.category)}
+          path={`/products?q=${slugifyString(product.category.name)}`}
+          label={product.category.name}
         />
 
         <p className="mt-2 text-xl text-muted-foreground">

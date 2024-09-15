@@ -16,7 +16,7 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <>
-      {children}
+      <div className="grow">{children}</div>
       <Footer />
     </>
   );

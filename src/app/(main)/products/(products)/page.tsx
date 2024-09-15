@@ -1,10 +1,8 @@
-/* eslint-disable @next/next/no-img-element */
 import { ProductCard } from "@/components/products/ProductCard";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
-import { categoryToSlug, slugToCategory } from "@/helpers/category";
+import { slugifyString } from "@/helpers";
 import { cn } from "@/lib/utils";
-import { CATEGORIES } from "@/lib/validation/product";
 import { api } from "@/trpc/server";
 import { HeartIcon, LeafIcon, CupSodaIcon } from "lucide-react";
 import { type Metadata } from "next";
@@ -19,34 +17,29 @@ export default async function ProductsPage({
 }: {
   searchParams?: { q: string };
 }) {
-  let products = [];
+  const categories = (await api.public.categories.getAllCategories()).map(
+    (category) => category.name,
+  );
 
-  if (!searchParams?.q) {
-    products = await api.product.getAll();
-  } else if (CATEGORIES.includes(slugToCategory(searchParams?.q))) {
-    products = await api.product.getProductsByCategory({
-      category: slugToCategory(searchParams?.q),
-      take: 10,
-    });
-  } else {
-    products = await api.product.getAll();
-  }
+  const categoryName = searchParams?.q ?? "all";
+
+  console.log("categoryName", categoryName);
+
+  const products = await api.public.products.getProductsByCategoryName({
+    name: categoryName.replace("-", " "),
+  });
 
   return (
     <div className="container mx-auto mb-20 max-w-7xl">
       <div className="my-4">
-        {["all", ...CATEGORIES].map((category) => (
+        {["all", ...categories].map((category) => (
           <Link
             className={cn(
               buttonVariants({
                 variant:
-                  slugToCategory(searchParams?.q ?? "") === category
+                  categoryName.replace("-", " ") === category.toLowerCase()
                     ? "outline"
-                    : !CATEGORIES.includes(
-                          slugToCategory(searchParams?.q ?? ""),
-                        ) && category === "all"
-                      ? "outline"
-                      : "ghost",
+                    : "ghost",
                 size: "lg",
               }),
               "mb-2 mr-2 text-lg",
@@ -55,18 +48,22 @@ export default async function ProductsPage({
             href={
               category === "all"
                 ? "/products"
-                : `/products?q=${categoryToSlug(category)}`
+                : `/products?q=${slugifyString(category)}`
             }
           >
-            {category.toLowerCase().replace("_", " ")}
+            {category}
           </Link>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+      <div className="grid min-h-[300px] grid-cols-1 place-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {products.length === 0 ? (
+          <p className="col-span-3 text-center text-2xl">No products found</p>
+        ) : (
+          products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))
+        )}
       </div>
 
       <section className="my-12">
