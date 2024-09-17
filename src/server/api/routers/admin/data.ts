@@ -8,7 +8,13 @@ export const dataRouter = createTRPCRouter({
     });
     const totalProducts = await ctx.db.product.count();
 
-    const totalOrders = 0;
+    const totalOrders = await ctx.db.cart.findMany({
+      select: {
+        cart_items: {
+          where: { quantity: { gt: 0 } },
+        },
+      },
+    });
 
     const totalRevenue = 0;
 
@@ -32,7 +38,7 @@ export const dataRouter = createTRPCRouter({
     return {
       totalCustomers,
       totalProducts,
-      totalOrders,
+      totalOrders: totalOrders.length,
       totalRevenue,
       minStock,
       maxStock,

@@ -1,5 +1,4 @@
-import { type Product } from "@prisma/client";
-import { ProductWithCategory } from "./admin";
+import { type ProductWithCategory } from "./admin";
 
 export const filterProductsForPublic = (products: ProductWithCategory[]) => {
   return products.map((product) => {

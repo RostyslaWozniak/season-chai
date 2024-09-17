@@ -29,6 +29,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
   const { user } = await validateRequest();
   return {
     user,
+    userId: user?.id,
     db,
     ...opts,
   };
@@ -107,6 +108,22 @@ const timingMiddleware = t.middleware(async ({ next, path }) => {
  * are logged in.
  */
 export const publicProcedure = t.procedure.use(timingMiddleware);
+
+const enforceUserIdAuthed = t.middleware(async ({ ctx, next }) => {
+  if (!ctx.userId) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+    });
+  }
+
+  return next({
+    ctx: {
+      userId: ctx.userId,
+    },
+  });
+});
+
+export const privateProcedure = t.procedure.use(enforceUserIdAuthed);
 
 const adminMiddleware = t.middleware(async ({ next, ctx }) => {
   if (ctx.user?.role !== "ADMIN") {

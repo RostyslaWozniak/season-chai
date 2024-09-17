@@ -11,6 +11,7 @@ import { redirect } from "next/navigation";
 
 export async function signUp(
   credentials: SignUpSchema,
+  redirectUrl?: string | null,
 ): Promise<{ error: string }> {
   try {
     const { username, email, password } = signUpSchema.parse(credentials);
@@ -63,6 +64,12 @@ export async function signUp(
       },
     });
 
+    await db.cart.create({
+      data: {
+        user_id: userId,
+      },
+    });
+
     const session = await lucia.createSession(userId, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
     cookies().set(
@@ -71,7 +78,7 @@ export async function signUp(
       sessionCookie.attributes,
     );
 
-    return redirect("/");
+    return redirect(redirectUrl ?? "/");
   } catch (error) {
     if (isRedirectError(error)) throw error;
     console.error(error);

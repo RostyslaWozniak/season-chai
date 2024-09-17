@@ -2,7 +2,7 @@
 
 import { logout } from "@/app/(auth)/logout/actions";
 
-import { Lock, LogOutIcon, ShoppingBag } from "lucide-react";
+import { Lock, LogOutIcon } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "@/context/SessionProvider";
 import { cn } from "@/lib/utils";
@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { UserAvatar } from "./UserAvatar";
 import { LoginButton } from "./auth/LoginButton";
-import IconMenu from "./IconMenu";
+import { Button } from "./ui/button";
 
 interface UserButtonProps {
   className?: string;
@@ -30,24 +30,22 @@ export const UserButton = ({ className }: UserButtonProps) => {
       {user ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button
+            <Button
+              variant="outline"
+              size="icon"
               className={cn(
-                "rounded-full text-primary outline-primary",
+                "rounded-full border-primary outline-primary",
                 className,
               )}
             >
               <UserAvatar avatarUrl={user.avatarUrl} fallback={user.username} />
-            </button>
+            </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Logged in as {user.username}</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <Link href={`/cart`}>
-              <DropdownMenuItem className="cursor-pointer">
-                <IconMenu icon={ShoppingBag} text="Cart" />
-              </DropdownMenuItem>
-            </Link>
-            <DropdownMenuSeparator />
+          <DropdownMenuContent align="start">
+            <DropdownMenuLabel>
+              Logged in as{" "}
+              <span className="font-bold capitalize">{user.username}</span>
+            </DropdownMenuLabel>
             {user.role === "ADMIN" && (
               <Link href={`/dashboard`}>
                 <DropdownMenuItem className="cursor-pointer">

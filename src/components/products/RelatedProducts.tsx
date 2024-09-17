@@ -1,10 +1,9 @@
 import { api } from "@/trpc/server";
 import { Card, CardTitle } from "../ui/card";
-import { Button } from "../ui/button";
-import { ShoppingCartIcon } from "lucide-react";
 import Image from "next/image";
 import { formatPrice } from "@/helpers";
 import Link from "next/link";
+import { AddToCartButton } from "./AddToCartButton";
 
 export const RelatedProducts = async ({
   categoryId,
@@ -26,34 +25,35 @@ export const RelatedProducts = async ({
       <h2 className="mb-4 border-b text-xl">Others Products</h2>
 
       <div className="grid grid-cols-2 gap-4">
-        {products
-          // .filter((product) => product.category === category)
-          .map((product) => (
+        {products.map((product) => (
+          <Card
+            className="grid h-full grid-cols-3 overflow-hidden duration-300 hover:shadow-md"
+            key={product.id}
+          >
             <Link key={product.id} href={`/products/${product.id}`}>
-              <Card className="grid h-full grid-cols-3 overflow-hidden duration-300 hover:shadow-md">
-                <Image
-                  width={150}
-                  height={200}
-                  src={product.image_url}
-                  alt={product.name}
-                  className="h-full object-cover"
-                />
-
-                <div className="col-span-2 flex flex-col items-start justify-center p-4">
-                  <div className="flex grow flex-col justify-center">
-                    <CardTitle className="text-lg">{product.name}</CardTitle>
-                    <p className="text-muted-foreground">
-                      {formatPrice(product.price)}
-                    </p>
-                  </div>
-                  <Button className="w-full" variant="outline">
-                    Add to Cart
-                    <ShoppingCartIcon className="ml-2 h-4 w-4" />
-                  </Button>
-                </div>
-              </Card>
+              <Image
+                width={150}
+                height={200}
+                src={product.image_url}
+                alt={product.name}
+                className="h-full object-cover"
+              />
             </Link>
-          ))}
+            <div className="group col-span-2 flex flex-col items-start justify-center p-4">
+              <Link key={product.id} href={`/products/${product.id}`}>
+                <div className="flex grow flex-col justify-center">
+                  <CardTitle className="text-lg group-hover:underline">
+                    {product.name}
+                  </CardTitle>
+                  <p className="text-muted-foreground">
+                    {formatPrice(product.price)}
+                  </p>
+                </div>
+              </Link>
+              <AddToCartButton productId={product.id} />
+            </div>
+          </Card>
+        ))}
       </div>
     </div>
   );

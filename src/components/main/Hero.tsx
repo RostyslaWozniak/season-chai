@@ -1,9 +1,9 @@
 import { Gift, LeafyGreen, ShoppingBag } from "lucide-react";
-import { Button, buttonVariants } from "../ui/button";
-import image from "public/images/hero.svg";
+import { buttonVariants } from "../ui/button";
 import { formatPrice } from "@/helpers";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 const features = [
   {
@@ -48,7 +48,7 @@ export const HeroSection = () => {
                 <ShoppingBag className="ml-2 h-5 w-5" />
               </Link>
               <Link
-                href="/products"
+                href="/products?q=gift-sets"
                 className={cn(
                   buttonVariants({ variant: "outline", size: "lg" }),
                   "px-8 text-lg",
@@ -61,7 +61,9 @@ export const HeroSection = () => {
           </div>
           <div className="relative">
             <div className="absolute -right-10 top-1/2 w-72 -translate-y-1/2 transform rounded-full bg-primary/10 sm:h-[450px] sm:w-[450px]"></div>
-            <img
+            <Image
+              width={450}
+              height={450}
               src="/images/hero.svg"
               alt="Elegant tea set"
               className="relative z-10 rounded-lg object-cover"

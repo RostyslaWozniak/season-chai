@@ -10,6 +10,7 @@ import {
 import { api } from "@/trpc/server";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { User } from "lucide-react";
+import Image from "next/image";
 
 export const CustomersList = async () => {
   const users = await api.admin.users.getAllUsers();
@@ -37,7 +38,7 @@ export const CustomersList = async () => {
                   <TableCell>{displayName}</TableCell>
                   <TableCell>
                     {avatarUrl ? (
-                      <img
+                      <Image
                         src={avatarUrl}
                         alt="User avatar"
                         className="aspect-square h-12 object-cover"

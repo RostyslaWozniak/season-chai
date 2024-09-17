@@ -11,11 +11,11 @@ import { InfoIcon, Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { ProductForm } from "./ProductForm";
 import { DeleteProductButton } from "./DeleteProductButton";
-import { type AdminProduct } from "@/types";
 import { AdminInfoCard } from "../../_components/AdminInfoCard";
+import { type AdminProductWithCategory } from "@/server/helpers/admin";
 
 type ProductTableSettingsProps = {
-  product: AdminProduct;
+  product: AdminProductWithCategory;
 };
 
 export const ProductTableSettings = ({

@@ -15,10 +15,15 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { loginSchema, type LoginSchema } from "@/lib/validation/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 
 export default function LoginForm() {
+  const searchParams = useSearchParams();
+
+  const redirect = searchParams.get("redirect");
+
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -32,7 +37,7 @@ export default function LoginForm() {
 
   async function onSubmit(values: LoginSchema) {
     startTransition(async () => {
-      const { error } = await login(values);
+      const { error } = await login(values, redirect);
       if (error) {
         toast({
           title: "Error",
@@ -46,7 +51,6 @@ export default function LoginForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-        {/* {error && <p className="text-center text-destructive">{error}</p>} */}
         <FormField
           control={form.control}
           name="email"

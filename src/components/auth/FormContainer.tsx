@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import { AnimatePresence, motion } from "framer-motion";
 import { TransitionLink } from "../TransitionLink";
 
 type FormContainerProps = {

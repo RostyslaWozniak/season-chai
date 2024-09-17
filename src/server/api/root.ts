@@ -2,6 +2,7 @@ import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 import { adminRouter } from "./routers/admin";
 import { uploadFilesRouter } from "./routers/uploadFiles";
 import { publicRouter } from "./routers/public";
+import { privateRouter } from "./routers/private";
 
 /**
  * This is the primary router for your server.
@@ -11,7 +12,7 @@ import { publicRouter } from "./routers/public";
 export const appRouter = createTRPCRouter({
   admin: adminRouter,
   public: publicRouter,
-
+  private: privateRouter,
   uploadFiles: uploadFilesRouter,
 });
 

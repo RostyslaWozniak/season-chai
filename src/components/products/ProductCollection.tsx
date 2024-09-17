@@ -6,6 +6,7 @@ import IconMenu from "../IconMenu";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "../ui/button";
+import { slugifyString } from "@/helpers";
 
 export const ProductCollection = async ({
   category,
@@ -34,7 +35,7 @@ export const ProductCollection = async ({
         ))}
       </div>
       <Link
-        href="/products"
+        href={`/products?q=${new URLSearchParams({ q: slugifyString(category.name) }).toString()}`}
         className={cn(
           buttonVariants({ size: "lg", variant: "link" }),
           "float-right mt-4",

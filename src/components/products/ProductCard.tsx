@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,7 +9,7 @@ import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { formatPrice, slugifyString } from "@/helpers";
 import { DropdownWrapper } from "@/components/DropdownWrapper";
 import IconMenu from "@/components/IconMenu";
-import { InfoIcon, ShoppingCart } from "lucide-react";
+import { InfoIcon } from "lucide-react";
 import { DialogWrapper } from "../DialogWrapper";
 import { InfoCard } from "./InfoCard";
 import { useState } from "react";
@@ -18,6 +17,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { TagLink } from "../TagLink";
 import { type PublicProductWithCategory } from "@/server/helpers/public";
+import { AddToCartButton } from "./AddToCartButton";
 
 type ProductCardProps = {
   product: PublicProductWithCategory;
@@ -72,15 +72,12 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             </p>
           </CardContent>
         </Link>
-        <CardFooter className="flex items-center justify-between p-4">
+        <CardFooter className="flex h-14 items-center justify-between px-4 py-0">
           <span className="text-lg font-bold">
             {formatPrice(product.price)}
           </span>
 
-          <Button variant="outline" size="sm">
-            <ShoppingCart className="mr-2 h-4 w-4" />
-            Add to Cart
-          </Button>
+          <AddToCartButton productId={product.id} />
         </CardFooter>
       </Card>
     </>

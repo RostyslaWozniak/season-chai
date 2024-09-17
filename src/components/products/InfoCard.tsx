@@ -1,10 +1,9 @@
 "use client";
-import { ShoppingCart } from "lucide-react";
 import { formatPrice, slugifyString } from "@/helpers";
-import { Button } from "../ui/button";
 import Image from "next/image";
 import { TagLink } from "../TagLink";
 import { type PublicProductWithCategory } from "@/server/helpers/public";
+import { AddToCartButton } from "./AddToCartButton";
 
 export const InfoCard = ({
   product,
@@ -40,10 +39,7 @@ export const InfoCard = ({
           <p className="text-2xl font-bold text-primary">
             {formatPrice(product.price)}
           </p>
-          <Button size="lg">
-            <ShoppingCart className="mr-2 h-4 w-4" />
-            Add to Cart
-          </Button>
+          <AddToCartButton productId={product.id} />
         </div>
       </div>
     </div>

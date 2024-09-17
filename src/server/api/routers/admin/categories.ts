@@ -5,7 +5,6 @@ import {
 import { adminProcedure, createTRPCRouter } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import { revalidatePath } from "next/cache";
 
 export const categoriesRouter = createTRPCRouter({
   // GET ALL CATEGORIES

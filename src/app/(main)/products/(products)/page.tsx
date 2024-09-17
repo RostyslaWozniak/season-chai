@@ -23,8 +23,6 @@ export default async function ProductsPage({
 
   const categoryName = searchParams?.q ?? "all";
 
-  console.log("categoryName", categoryName);
-
   const products = await api.public.products.getProductsByCategoryName({
     name: categoryName.replace("-", " "),
   });

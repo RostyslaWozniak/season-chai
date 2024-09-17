@@ -1,7 +1,7 @@
 "use client";
 import Link, { type LinkProps } from "next/link";
 import React from "react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 interface TransitionLinkProps extends LinkProps {
@@ -10,9 +10,9 @@ interface TransitionLinkProps extends LinkProps {
   className?: string;
 }
 
-function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+// function sleep(ms: number): Promise<void> {
+//   return new Promise((resolve) => setTimeout(resolve, ms));
+// }
 
 export const TransitionLink: React.FC<TransitionLinkProps> = ({
   children,
@@ -20,22 +20,22 @@ export const TransitionLink: React.FC<TransitionLinkProps> = ({
   className,
   ...props
 }) => {
-  const router = useRouter();
+  // const router = useRouter();
 
-  const handleTransition = async (
-    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-  ) => {
-    e.preventDefault();
-    const container = document.getElementById("main-container");
+  // const handleTransition = async (
+  //   e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+  // ) => {
+  //   e.preventDefault();
+  //   const container = document.getElementById("main-container");
 
-    container?.classList.add("page-transition");
+  //   container?.classList.add("page-transition");
 
-    await sleep(500);
-    router.push(href);
-    await sleep(500);
+  //   await sleep(500);
+  //   router.push(href);
+  //   await sleep(500);
 
-    container?.classList.remove("page-transition");
-  };
+  //   container?.classList.remove("page-transition");
+  // };
 
   return (
     <Link

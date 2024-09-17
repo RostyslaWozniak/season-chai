@@ -15,10 +15,15 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { signUpSchema, type SignUpSchema } from "@/lib/validation/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 
 export default function SignUpForm() {
+  const searchParams = useSearchParams();
+
+  const redirect = searchParams.get("redirect");
+
   const form = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -34,7 +39,7 @@ export default function SignUpForm() {
 
   function onSubmit(values: SignUpSchema) {
     startTransition(async () => {
-      const { error } = await signUp(values);
+      const { error } = await signUp(values, redirect);
       if (error) {
         toast({
           description: error,
