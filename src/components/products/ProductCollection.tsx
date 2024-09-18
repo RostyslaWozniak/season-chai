@@ -35,7 +35,7 @@ export const ProductCollection = async ({
         ))}
       </div>
       <Link
-        href={`/products?q=${new URLSearchParams({ q: slugifyString(category.name) }).toString()}`}
+        href={`/products?q=${slugifyString(category.name)}`}
         className={cn(
           buttonVariants({ size: "lg", variant: "link" }),
           "float-right mt-4",

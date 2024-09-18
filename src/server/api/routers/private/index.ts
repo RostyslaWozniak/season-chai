@@ -5,7 +5,7 @@ export const privateRouter = createTRPCRouter({
   // GET CART ITEMS
   getCartItems: privateProcedure.query(async ({ ctx }) => {
     const data = await ctx.db.cartItem.findMany({
-      where: { carts: { user_id: ctx.userId } },
+      where: { carts: { user_id: ctx.userId }, quantity: { gt: 0 } },
       include: {
         products: {
           select: {
@@ -38,6 +38,7 @@ export const privateRouter = createTRPCRouter({
         where: {
           carts: { user_id: ctx.userId },
           product_id: input.id,
+          quantity: { gt: 0 },
         },
       });
 
@@ -46,8 +47,35 @@ export const privateRouter = createTRPCRouter({
       return cartItem.quantity;
     }),
 
+  setCartItemQuantity: privateProcedure
+    .input(z.object({ id: z.string(), quantity: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const cart = await ctx.db.cart.findFirstOrThrow({
+        where: { user_id: ctx.userId },
+      });
+
+      const cartItem = await ctx.db.cartItem.findFirst({
+        where: { cart_id: cart.id, product_id: input.id },
+      });
+
+      if (cartItem) {
+        await ctx.db.cartItem.update({
+          where: { id: cartItem.id },
+          data: { quantity: input.quantity },
+        });
+      } else {
+        await ctx.db.cartItem.create({
+          data: {
+            cart_id: cart.id,
+            product_id: input.id,
+            quantity: input.quantity,
+          },
+        });
+      }
+    }),
+
   // ADD ONE TO CART
-  addToCart: privateProcedure
+  addOneToCart: privateProcedure
     .input(z.object({ productId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const cart = await ctx.db.cart.findFirstOrThrow({
@@ -69,6 +97,7 @@ export const privateRouter = createTRPCRouter({
         });
       }
     }),
+
   // REMOVE ONE FORM CART
   removeOneFromCart: privateProcedure
     .input(z.object({ id: z.string() }))

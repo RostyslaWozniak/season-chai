@@ -41,7 +41,7 @@ export const UserButton = ({ className }: UserButtonProps) => {
               <UserAvatar avatarUrl={user.avatarUrl} fallback={user.username} />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
+          <DropdownMenuContent align="end">
             <DropdownMenuLabel>
               Logged in as{" "}
               <span className="font-bold capitalize">{user.username}</span>

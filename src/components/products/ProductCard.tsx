@@ -9,7 +9,7 @@ import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { formatPrice, slugifyString } from "@/helpers";
 import { DropdownWrapper } from "@/components/DropdownWrapper";
 import IconMenu from "@/components/IconMenu";
-import { InfoIcon } from "lucide-react";
+import { InfoIcon, ShoppingCart } from "lucide-react";
 import { DialogWrapper } from "../DialogWrapper";
 import { InfoCard } from "./InfoCard";
 import { useState } from "react";
@@ -18,12 +18,17 @@ import Image from "next/image";
 import { TagLink } from "../TagLink";
 import { type PublicProductWithCategory } from "@/server/helpers/public";
 import { AddToCartButton } from "./AddToCartButton";
+import { useSession } from "@/context/SessionProvider";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "../ui/button";
 
 type ProductCardProps = {
   product: PublicProductWithCategory;
 };
 
 export const ProductCard = ({ product }: ProductCardProps) => {
+  const { user } = useSession();
+
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   return (
     <>
@@ -37,15 +42,21 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         <InfoCard product={product} />
       </DialogWrapper>
 
-      <Card className="flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg">
+      <Card className="group flex h-full flex-col overflow-hidden transition-all duration-300 hover:shadow-lg">
         <CardHeader className="relative p-0">
-          <Image
-            width={400}
-            height={400}
-            src={product.image_url}
-            alt={product.name}
-            className="aspect-square w-full object-cover"
-          />
+          <Link
+            key={product.id}
+            href={`/products/${product.id}`}
+            className="flex h-full"
+          >
+            <Image
+              width={400}
+              height={400}
+              src={product.image_url}
+              alt={product.name}
+              className="aspect-square h-full w-full object-cover"
+            />
+          </Link>
           <TagLink
             path={`/products?q=${slugifyString(product.category.name)}`}
             label={product.category.name}
@@ -63,21 +74,37 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             </DropdownWrapper>
           </div>
         </CardHeader>
-        <Link key={product.id} href={`/products/${product.id}`}>
-          <CardContent className="grow border-b border-t p-4">
-            <h2 className="text-xl font-semibold capitalize">{product.name}</h2>
+        <Link
+          key={product.id}
+          href={`/products/${product.id}`}
+          className="flex h-full"
+        >
+          <CardContent className="grow border-t py-2">
+            <h2 className="text-xl font-semibold capitalize group-hover:underline">
+              {product.name}
+            </h2>
 
             <p className="line-clamp-2 overflow-hidden text-ellipsis text-muted-foreground">
               {product.description}
             </p>
           </CardContent>
         </Link>
-        <CardFooter className="flex h-14 items-center justify-between px-4 py-0">
+        <CardFooter className="flex min-h-14 items-center justify-between border-t px-4 py-0">
           <span className="text-lg font-bold">
             {formatPrice(product.price)}
           </span>
 
-          <AddToCartButton productId={product.id} />
+          {user ? (
+            <AddToCartButton productId={product.id} />
+          ) : (
+            <Link
+              href={`/login?redirect=/products/${product.id}`}
+              className={cn(buttonVariants({ variant: "outline" }))}
+            >
+              <ShoppingCart className="mr-2 h-4 w-4" />
+              Add to Cart
+            </Link>
+          )}
         </CardFooter>
       </Card>
     </>

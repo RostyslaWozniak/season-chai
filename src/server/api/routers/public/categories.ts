@@ -4,7 +4,9 @@ import { createTRPCRouter, publicProcedure } from "../../trpc";
 export const categoriesRouter = createTRPCRouter({
   // GET ALL CATEGORIES
   getAllCategories: publicProcedure.query(async ({ ctx }) => {
-    const categories = await ctx.db.category.findMany();
+    const categories = await ctx.db.category.findMany({
+      orderBy: { name: "asc" },
+    });
 
     if (!categories) throw new TRPCError({ code: "NOT_FOUND" });
 

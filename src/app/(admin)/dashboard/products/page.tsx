@@ -44,6 +44,7 @@ export default async function ProductsListPage() {
       description: minStock[0]?.name,
     },
   ];
+
   return (
     <div className="relative w-full space-y-10">
       <div className="absolute -top-2 right-0">

@@ -13,15 +13,19 @@ import { formatPrice } from "@/helpers";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
-import { api } from "@/trpc/react";
+// import { api } from "@/trpc/react";
 import { AddToCartButton } from "@/components/products/AddToCartButton";
 import { useSession } from "@/context/SessionProvider";
+import { useCart } from "@/context/CartContext";
+import { motion } from "framer-motion";
 
 export function CartSheet() {
+  const { cartItems } = useCart();
+
   const { user } = useSession();
   if (!user) return null;
 
-  const { data: cartItems } = api.private.getCartItems.useQuery();
+  // const { data: cartItems } = api.private.getCartItems.useQuery();
 
   if (!cartItems) return null;
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -29,6 +33,7 @@ export function CartSheet() {
     (sum, item) => sum + item.price * item.quantity,
     0,
   );
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -50,7 +55,8 @@ export function CartSheet() {
         </SheetHeader>
         <ScrollArea className="grid grow border-b px-4 pr-10">
           {cartItems.map((product) => (
-            <div
+            <motion.div
+              layout
               key={product.id}
               className="grid grid-cols-3 overflow-hidden border-b py-4"
             >
@@ -71,7 +77,7 @@ export function CartSheet() {
                 </div>
                 <AddToCartButton productId={product.id} />
               </div>
-            </div>
+            </motion.div>
           ))}
         </ScrollArea>
         <div className="flex items-center justify-between px-4 py-8">

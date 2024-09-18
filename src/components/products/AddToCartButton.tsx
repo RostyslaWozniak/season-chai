@@ -1,79 +1,69 @@
 "use client";
 
 import { ShoppingCart } from "lucide-react";
-import React from "react";
-import { Button, buttonVariants } from "../ui/button";
+
+import { Button } from "../ui/button";
+import { Skeleton } from "../ui/skeleton";
+import { useCart } from "@/context/CartContext";
+import { useDebounce } from "@/hooks/use-debounce";
+import { useEffect } from "react";
 import { api } from "@/trpc/react";
-import { useSession } from "@/context/SessionProvider";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
 
 export const AddToCartButton = ({ productId }: { productId: string }) => {
-  const { user } = useSession();
-  if (!user) {
-    return (
-      <Link
-        href={`/login?redirect=/products/${productId}`}
-        className={cn(buttonVariants({ variant: "outline" }))}
-      >
-        <ShoppingCart className="mr-2 h-4 w-4" />
-        Add to Cart
-      </Link>
-    );
-  }
+  const { mutate } = api.private.setCartItemQuantity.useMutation();
+
   const {
-    data: productQuantity,
-    isLoading,
-    refetch,
-  } = api.private.getQuantityOfCartItem.useQuery({
-    id: productId,
-  });
+    isLoadingCartItems,
+    handleRemoveOneFromCart,
+    handleAddOneToCart,
+    cartItems,
+  } = useCart();
 
-  const utils = api.useUtils();
+  const clientQuantity = cartItems?.find(
+    (item) => item.id === productId,
+  )?.quantity;
 
-  // ADD TO CART
-  const { mutate: addToCart } = api.private.addToCart.useMutation({
-    onSuccess: () => {
-      void utils.private.getCartItems.invalidate();
-      void utils.admin.orders.invalidate();
-      void refetch();
-    },
-  });
-  const handleAddToCart = () => {
-    addToCart({ productId });
-  };
+  const debouncedQuantity = useDebounce(clientQuantity, 500);
 
-  // REMOVE FROM CART
-  const { mutate: removeFromCart } = api.private.removeOneFromCart.useMutation({
-    onSuccess: () => {
-      void utils.private.getCartItems.invalidate();
-      void utils.admin.orders.invalidate();
-      void refetch();
-    },
-  });
+  useEffect(() => {
+    if (debouncedQuantity === undefined) return;
+    console.log("debouncedQuantity", debouncedQuantity);
+    mutate({ id: productId ?? "", quantity: debouncedQuantity ?? 0 });
+  }, [debouncedQuantity, mutate, productId]);
 
-  const handleRemoveFromCart = () => {
-    removeFromCart({ id: productId });
-  };
   return (
-    <>
-      {!isLoading &&
-        (productQuantity ? (
-          <div className="flex items-center gap-3 text-xl font-bold">
-            <Button onClick={handleRemoveFromCart} variant="outline" size="sm">
+    <div>
+      {!isLoadingCartItems ? (
+        clientQuantity ? (
+          <div className="flex items-center gap-3 text-2xl font-bold">
+            <Button
+              onClick={() => handleRemoveOneFromCart(productId)}
+              variant="outline"
+              size="sm"
+            >
               -
             </Button>
-            <p>{productQuantity}</p>
-            <Button onClick={handleAddToCart} variant="outline" size="sm">
+            <p className="min-w-8 text-center">{clientQuantity}</p>
+            <Button
+              onClick={() => handleAddOneToCart(productId)}
+              variant="outline"
+              size="sm"
+            >
               +
             </Button>
           </div>
         ) : (
-          <Button variant="outline" onClick={handleAddToCart}>
+          <Button
+            variant="outline"
+            onClick={() => handleAddOneToCart(productId)}
+          >
             <ShoppingCart className="mr-2 h-4 w-4" />
             Add to Cart
           </Button>
-        ))}
-    </>
+        )
+      ) : (
+        <Skeleton className="h-8 w-32" />
+      )}
+    </div>
   );
 };

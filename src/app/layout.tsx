@@ -8,6 +8,7 @@ import { validateRequest } from "@/lib/auth";
 import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { fileRouter } from "@/app/api/uploadthing/core";
+import CartProvider from "@/context/CartContext";
 
 export default async function RootLayout({
   children,
@@ -19,13 +20,15 @@ export default async function RootLayout({
         <NextSSRPlugin routerConfig={extractRouterConfig(fileRouter)} />
         <TRPCReactProvider>
           <SessionProvider value={session}>
-            <div className="flex min-h-screen flex-col">
-              <Header />
-              <main className="flex w-screen grow flex-col pt-20">
-                {children}
-              </main>
-              <Toaster />
-            </div>
+            <CartProvider>
+              <div className="flex min-h-screen flex-col">
+                <Header />
+                <main className="flex w-screen grow flex-col pt-20">
+                  {children}
+                </main>
+                <Toaster />
+              </div>
+            </CartProvider>
           </SessionProvider>
         </TRPCReactProvider>
       </body>
