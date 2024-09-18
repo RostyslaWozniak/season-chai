@@ -26,9 +26,9 @@ export default async function ProductItemPage({
 
   console.log(product);
   return (
-    <div className="container mx-auto flex h-full min-h-screen max-w-6xl flex-col items-center space-y-8">
+    <div className="container mx-auto flex h-full min-h-screen max-w-6xl flex-col items-center space-y-8 pb-10">
       <InfoCard product={product} />
-      <div className="grid w-full grid-cols-5 gap-20">
+      <div className="flex w-full grid-cols-5 flex-col gap-10 lg:grid lg:gap-20">
         <div className="col-span-4">
           <RelatedProducts categoryId={product.category.id} id={product.id} />
         </div>

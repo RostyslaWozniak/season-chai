@@ -11,8 +11,8 @@ import { InfoIcon, Edit, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { ProductForm } from "./ProductForm";
 import { DeleteProductButton } from "./DeleteProductButton";
-import { AdminInfoCard } from "../../_components/AdminInfoCard";
 import { type AdminProductWithCategory } from "@/server/helpers/admin";
+import { InfoCard } from "@/components/products/InfoCard";
 
 type ProductTableSettingsProps = {
   product: AdminProductWithCategory;
@@ -34,7 +34,7 @@ export const ProductTableSettings = ({
         className="flex w-[800px] flex-col gap-3"
         closeButton="Ok"
       >
-        <AdminInfoCard product={product} />
+        <InfoCard product={product} hideImageOnMobile />
       </DialogWrapper>
       <DialogWrapper
         title="Edit Product"

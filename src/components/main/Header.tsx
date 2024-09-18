@@ -5,7 +5,7 @@ import { UserButton } from "../UserButton";
 
 export default async function Header() {
   return (
-    <header className="fixed top-0 z-[40] w-screen bg-card/30 shadow-sm backdrop-blur-sm">
+    <header className="fixed top-0 z-[40] w-full bg-card/30 shadow-sm backdrop-blur-sm">
       <div className="mx-auto flex flex-wrap items-center justify-between gap-5 px-5 py-2 lg:px-12">
         <TransitionLink
           href="/"

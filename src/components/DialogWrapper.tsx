@@ -5,6 +5,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { buttonVariants } from "./ui/button";
@@ -31,27 +42,55 @@ export const DialogWrapper = ({
   title,
   description,
 }: DialogProps) => {
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="flex h-min max-h-min max-w-min flex-col">
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
-        </DialogHeader>
-        <div className={cn("grow", className)}>
-          {children}
-          {closeButton && (
-            <DialogClose
-              className={cn(
-                "self-end justify-self-end",
-                buttonVariants(closeButtonVariant),
+    <>
+      {isDesktop ? (
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+          <DialogContent className="flex h-min max-h-min max-w-min flex-col">
+            <DialogHeader>
+              <DialogTitle>{title}</DialogTitle>
+              <DialogDescription>{description}</DialogDescription>
+            </DialogHeader>
+            <div className={cn("grow", className)}>
+              {children}
+              {closeButton && (
+                <DialogClose
+                  className={cn(
+                    "self-end justify-self-end",
+                    buttonVariants(closeButtonVariant),
+                  )}
+                >
+                  {closeButton}
+                </DialogClose>
               )}
-            >
-              {closeButton}
-            </DialogClose>
-          )}
-        </div>
-      </DialogContent>
-    </Dialog>
+            </div>
+          </DialogContent>
+        </Dialog>
+      ) : (
+        <Drawer open={isOpen} onOpenChange={setIsOpen}>
+          <DrawerContent>
+            <DrawerHeader className="text-left">
+              <DrawerTitle>{title}</DrawerTitle>
+              <DrawerDescription>{description}</DrawerDescription>
+            </DrawerHeader>
+            {children}
+            <DrawerFooter className="pt-2">
+              {closeButton && (
+                <DrawerClose
+                  asChild
+                  className={cn(
+                    "self-end justify-self-end",
+                    buttonVariants(closeButtonVariant),
+                  )}
+                >
+                  {closeButton}
+                </DrawerClose>
+              )}
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+      )}
+    </>
   );
 };

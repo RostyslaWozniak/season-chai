@@ -25,9 +25,8 @@ export function CartSheet() {
   const { user } = useSession();
   if (!user) return null;
 
-  // const { data: cartItems } = api.private.getCartItems.useQuery();
-
   if (!cartItems) return null;
+
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -46,8 +45,11 @@ export function CartSheet() {
           )}
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="flex min-w-[500px] flex-col p-0">
-        <SheetHeader className="p-4">
+      <SheetContent
+        side="right"
+        className="flex w-full flex-col gap-0 p-0 sm:min-w-[500px]"
+      >
+        <SheetHeader className="my-0 border-b-2 px-0 py-2 sm:p-4">
           <SheetTitle>Your Cart</SheetTitle>
           <SheetDescription>
             You have {cartItems.length} items in your cart.
@@ -80,7 +82,7 @@ export function CartSheet() {
             </motion.div>
           ))}
         </ScrollArea>
-        <div className="flex items-center justify-between px-4 py-8">
+        <div className="flex items-center justify-between p-4 md:py-8">
           <div>
             <p className="text-xl">
               {"Total Price: "}

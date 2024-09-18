@@ -27,7 +27,6 @@ export const AddToCartButton = ({ productId }: { productId: string }) => {
 
   useEffect(() => {
     if (debouncedQuantity === undefined) return;
-    console.log("debouncedQuantity", debouncedQuantity);
     mutate({ id: productId ?? "", quantity: debouncedQuantity ?? 0 });
   }, [debouncedQuantity, mutate, productId]);
 

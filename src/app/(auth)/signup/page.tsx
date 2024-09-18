@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <main className="flex grow items-center justify-center p-5">
+    <main className="flex grow items-center justify-center">
       <FormContainer
         title="Sign up"
         description="A place where even you can find a relax."

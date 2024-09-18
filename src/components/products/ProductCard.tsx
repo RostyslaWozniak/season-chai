@@ -9,7 +9,7 @@ import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { formatPrice, slugifyString } from "@/helpers";
 import { DropdownWrapper } from "@/components/DropdownWrapper";
 import IconMenu from "@/components/IconMenu";
-import { InfoIcon, ShoppingCart } from "lucide-react";
+import { InfoIcon } from "lucide-react";
 import { DialogWrapper } from "../DialogWrapper";
 import { InfoCard } from "./InfoCard";
 import { useState } from "react";
@@ -17,18 +17,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { TagLink } from "../TagLink";
 import { type PublicProductWithCategory } from "@/server/helpers/public";
-import { AddToCartButton } from "./AddToCartButton";
-import { useSession } from "@/context/SessionProvider";
-import { cn } from "@/lib/utils";
-import { buttonVariants } from "../ui/button";
+
+import CartBtn from "./CartBtn";
 
 type ProductCardProps = {
   product: PublicProductWithCategory;
 };
 
 export const ProductCard = ({ product }: ProductCardProps) => {
-  const { user } = useSession();
-
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   return (
     <>
@@ -39,7 +35,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         setIsOpen={setIsInfoOpen}
         className="flex w-[800px] flex-col gap-3"
       >
-        <InfoCard product={product} />
+        <InfoCard product={product} hideImageOnMobile />
       </DialogWrapper>
 
       <Card className="group flex h-full flex-col overflow-hidden transition-all duration-300 hover:shadow-lg">
@@ -93,18 +89,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           <span className="text-lg font-bold">
             {formatPrice(product.price)}
           </span>
-
-          {user ? (
-            <AddToCartButton productId={product.id} />
-          ) : (
-            <Link
-              href={`/login?redirect=/products/${product.id}`}
-              className={cn(buttonVariants({ variant: "outline" }))}
-            >
-              <ShoppingCart className="mr-2 h-4 w-4" />
-              Add to Cart
-            </Link>
-          )}
+          <CartBtn productId={product.id} />
         </CardFooter>
       </Card>
     </>

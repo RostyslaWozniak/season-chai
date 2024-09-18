@@ -29,15 +29,15 @@ export default async function ProductsPage({
 
   return (
     <div className="container mx-auto mb-20 max-w-7xl">
-      <div className="my-4">
+      <div className="my-4 grid grid-cols-2 flex-wrap sm:grid-cols-4 lg:flex">
         {["all", ...categories].map((category) => (
           <Link
             className={cn(
               buttonVariants({
                 variant:
                   categoryName.replace("-", " ") === category.toLowerCase()
-                    ? "outline"
-                    : "ghost",
+                    ? "default"
+                    : "outline",
                 size: "lg",
               }),
               "mb-2 mr-2 text-lg",

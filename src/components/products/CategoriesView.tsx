@@ -11,10 +11,10 @@ export const CategoriesView = ({
   className?: string;
 }) => {
   return (
-    <div>
+    <div className="px-4">
       <h2 className="mb-4 border-b text-xl">All Categories</h2>
 
-      <div className={cn("grid gap-4", className)}>
+      <div className={cn("flex flex-wrap gap-4 lg:grid", className)}>
         {categories.map(({ id, name }) => (
           <TagLink
             key={id}

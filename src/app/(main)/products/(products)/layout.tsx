@@ -5,7 +5,7 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <>
-      <section className="mx-auto mb-12 max-w-[1440px]">
+      <section className="mx-auto mb-12 hidden max-w-[1440px] lg:block">
         <div className="relative h-[400px] overflow-hidden rounded-lg">
           <img
             src="https://t4.ftcdn.net/jpg/01/25/68/03/360_F_125680347_PqYg8AUODHvTjpVNf61GPhG04NgMqPl6.jpg"
@@ -19,7 +19,7 @@ export default async function RootLayout({
           </div>
         </div>
       </section>
-      <div className="relative min-h-[400px]">{children}</div>
+      <div className="relative min-h-[400px] px-4">{children}</div>
     </>
   );
 }

@@ -20,13 +20,15 @@ export const FormContainer = ({
   linkLabel,
 }: FormContainerProps) => {
   return (
-    <div className="flex h-full max-h-[40rem] w-full max-w-[64rem] overflow-hidden rounded-2xl bg-card shadow-2xl">
-      <div className="w-full space-y-10 overflow-y-auto p-10 md:w-1/2">
+    <div className="flex max-h-[40rem] w-full max-w-[64rem] overflow-hidden rounded-2xl bg-card md:shadow-2xl">
+      <div className="w-full space-y-10 overflow-y-auto px-5 md:w-1/2 md:p-10">
         <div className="space-y-3">
-          <h1 className="text-center text-3xl font-bold">
+          <h1 className="text-center text-2xl font-bold md:text-3xl">
             {title} to Season Chai
           </h1>
-          <p className="text-center text-muted-foreground">{description}</p>
+          <p className="text-center text-sm text-muted-foreground md:text-base">
+            {description}
+          </p>
         </div>
         <div className="space-y-5">
           {children}
