@@ -21,7 +21,7 @@ export const FormContainer = ({
 }: FormContainerProps) => {
   return (
     <div className="flex max-h-[40rem] w-full max-w-[64rem] overflow-hidden rounded-2xl bg-card md:shadow-2xl">
-      <div className="w-full space-y-10 overflow-y-auto px-5 md:w-1/2 md:p-10">
+      <div className="mx-auto w-full max-w-[400px] space-y-10 overflow-y-auto px-5 md:w-1/2 md:p-10">
         <div className="space-y-3">
           <h1 className="text-center text-2xl font-bold md:text-3xl">
             {title} to Season Chai
@@ -43,7 +43,7 @@ export const FormContainer = ({
       <img
         src={imageUrl}
         alt=""
-        className="hidden w-1/2 object-cover object-[10%] duration-300 md:block"
+        className="hidden aspect-[9/10] w-1/2 object-cover object-[10%] duration-300 md:block"
       />
     </div>
   );

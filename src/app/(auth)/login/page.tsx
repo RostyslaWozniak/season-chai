@@ -14,7 +14,7 @@ export default function Page({
   const redirect = searchParams.redirect;
 
   return (
-    <main className="flex h-1 grow items-center justify-center">
+    <main className="flex grow items-center justify-center px-2">
       <FormContainer
         title="Login"
         description="A place where even you can find a relax."

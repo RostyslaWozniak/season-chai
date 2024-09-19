@@ -9,6 +9,16 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { fileRouter } from "@/app/api/uploadthing/core";
 import CartProvider from "@/context/CartContext";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: {
+    template: "%s | Season Chai",
+    default: "Season Chai",
+  },
+  description: "The e-commerce platform for tea products",
+  icons: [{ rel: "icon", url: "/favicon.svg" }],
+};
 
 export default async function RootLayout({
   children,
