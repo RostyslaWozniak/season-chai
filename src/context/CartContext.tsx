@@ -37,11 +37,6 @@ export default function CartProvider({ children }: React.PropsWithChildren) {
   const [products, setProducts] = useState<Product[] | undefined>([]);
 
   const { data: serverProducts } = api.public.products.getAll.useQuery();
-  const { user } = useSession();
-
-  const { data: serverCartItems, isLoading: isLoadingCartItems } = user
-    ? api.private.getCartItems.useQuery()
-    : { data: undefined, isLoading: false };
 
   const { mutate } = api.private.setCartItemQuantity.useMutation();
 
@@ -82,6 +77,9 @@ export default function CartProvider({ children }: React.PropsWithChildren) {
       });
     });
   };
+
+  const { data: serverCartItems, isLoading: isLoadingCartItems } =
+    api.private.getCartItems.useQuery();
 
   useEffect(() => {
     setCartItems(serverCartItems);

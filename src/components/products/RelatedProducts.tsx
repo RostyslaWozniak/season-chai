@@ -4,6 +4,7 @@ import Image from "next/image";
 import { formatPrice } from "@/helpers";
 import Link from "next/link";
 import { AddToCartButton } from "./AddToCartButton";
+import CartBtn from "./CartBtn";
 
 export const RelatedProducts = async ({
   categoryId,
@@ -50,7 +51,7 @@ export const RelatedProducts = async ({
                   </p>
                 </div>
               </Link>
-              <AddToCartButton productId={product.id} />
+              <CartBtn productId={product.id} />
             </div>
           </Card>
         ))}

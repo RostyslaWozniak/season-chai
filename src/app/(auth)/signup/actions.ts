@@ -11,8 +11,8 @@ import { redirect } from "next/navigation";
 
 export async function signUp(
   credentials: SignUpSchema,
-  redirectUrl?: string | null,
-): Promise<{ error: string }> {
+  redirectPath: string | null,
+): Promise<{ error: string | null; message: string | null }> {
   try {
     const { username, email, password } = signUpSchema.parse(credentials);
 
@@ -36,6 +36,7 @@ export async function signUp(
     if (existingUsername) {
       return {
         error: "Username already taken",
+        message: null,
       };
     }
 
@@ -50,6 +51,7 @@ export async function signUp(
     if (existingEmail) {
       return {
         error: "Email already taken",
+        message: null,
       };
     }
 
@@ -78,12 +80,13 @@ export async function signUp(
       sessionCookie.attributes,
     );
 
-    return redirect(redirectUrl ?? "/");
+    return redirect(redirectPath ?? "/");
   } catch (error) {
     if (isRedirectError(error)) throw error;
     console.error(error);
     return {
       error: "Something went wrong. Please try again.",
+      message: null,
     };
   }
 }

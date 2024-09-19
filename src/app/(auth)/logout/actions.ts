@@ -1,6 +1,7 @@
 "use server";
 
 import { lucia, validateRequest } from "@/lib/auth";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -20,6 +21,6 @@ export async function logout() {
     sessionCookie.value,
     sessionCookie.attributes,
   );
-
+  revalidatePath("/login");
   return redirect("/login");
 }

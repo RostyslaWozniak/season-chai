@@ -10,7 +10,7 @@ import { redirect } from "next/navigation";
 
 export async function login(
   credentials: LoginSchema,
-  redirectUrl?: string | null,
+  redirectUrl: string | null,
 ): Promise<{ error: string }> {
   try {
     const { email, password } = loginSchema.parse(credentials);
@@ -49,7 +49,6 @@ export async function login(
       sessionCookie.value,
       sessionCookie.attributes,
     );
-
     return redirect(redirectUrl ?? "/");
   } catch (error) {
     if (isRedirectError(error)) throw error;

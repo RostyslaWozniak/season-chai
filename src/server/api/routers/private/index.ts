@@ -1,9 +1,10 @@
-import { createTRPCRouter, privateProcedure } from "../../trpc";
+import { createTRPCRouter, publicProcedure } from "../../trpc";
 import { z } from "zod";
 
 export const privateRouter = createTRPCRouter({
   // GET CART ITEMS
-  getCartItems: privateProcedure.query(async ({ ctx }) => {
+  getCartItems: publicProcedure.query(async ({ ctx }) => {
+    if (!ctx.userId) return [];
     const data = await ctx.db.cartItem.findMany({
       where: { carts: { user_id: ctx.userId }, quantity: { gt: 0 } },
       include: {
@@ -18,6 +19,7 @@ export const privateRouter = createTRPCRouter({
       },
     });
 
+    if (!data) return [];
     const cartItems = data.map(({ products, quantity }) => {
       return {
         id: products.id,
@@ -31,7 +33,7 @@ export const privateRouter = createTRPCRouter({
   }),
 
   // GET QUANTITY OF CART ITEM
-  getQuantityOfCartItem: privateProcedure
+  getQuantityOfCartItem: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const cartItem = await ctx.db.cartItem.findFirst({
@@ -47,7 +49,7 @@ export const privateRouter = createTRPCRouter({
       return cartItem.quantity;
     }),
 
-  setCartItemQuantity: privateProcedure
+  setCartItemQuantity: publicProcedure
     .input(z.object({ id: z.string(), quantity: z.number() }))
     .mutation(async ({ ctx, input }) => {
       const cart = await ctx.db.cart.findFirstOrThrow({
@@ -75,7 +77,7 @@ export const privateRouter = createTRPCRouter({
     }),
 
   // ADD ONE TO CART
-  addOneToCart: privateProcedure
+  addOneToCart: publicProcedure
     .input(z.object({ productId: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const cart = await ctx.db.cart.findFirstOrThrow({
@@ -99,7 +101,7 @@ export const privateRouter = createTRPCRouter({
     }),
 
   // REMOVE ONE FORM CART
-  removeOneFromCart: privateProcedure
+  removeOneFromCart: publicProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const cartItem = await ctx.db.cartItem.findFirst({
