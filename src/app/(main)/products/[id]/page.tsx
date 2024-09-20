@@ -1,8 +1,8 @@
+import { getAllProducts } from "@/actions/products";
 import { CategoriesView } from "@/components/products/CategoriesView";
 import { InfoCard } from "@/components/products/InfoCard";
 
 import { RelatedProducts } from "@/components/products/RelatedProducts";
-import { db } from "@/server/db";
 import { api } from "@/trpc/server";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 }
 
 export async function generateStaticParams() {
-  const products = await db.product.findMany();
+  const products = await getAllProducts();
   return products.map((product) => ({
     id: product.id,
   }));
