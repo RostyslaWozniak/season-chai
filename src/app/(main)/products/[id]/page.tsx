@@ -3,6 +3,7 @@ import { CategoriesView } from "@/components/products/CategoriesView";
 import { InfoCard } from "@/components/products/InfoCard";
 
 import { RelatedProducts } from "@/components/products/RelatedProducts";
+
 import { api } from "@/trpc/server";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
