@@ -5,27 +5,18 @@ import { RelatedProducts } from "@/components/products/RelatedProducts";
 import { db } from "@/server/db";
 import { api } from "@/trpc/server";
 
-// export async function generateStaticParams() {
-//   const products = [1, 2, 3];
-//   console.log(products);
-//   return products.map((product) => ({ id: product.toString() }));
-// }
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const { id } = params;
+  const product = await api.public.products.getOne({ id });
 
-// export async function generateMetadata({ params }: { params: { id: string } }) {
-//   const { id } = params;
-//   const product = await api.public.products.getOne({ id });
+  return {
+    title: `${product.name}`,
+    description: product.description,
+  };
+}
 
-//   return {
-//     title: `${product.name}`,
-//     description: product.description,
-//   };
-// }
-export const dynamicParams = false;
-
-export const dynamic = "force-static";
 export async function generateStaticParams() {
   const products = await db.product.findMany();
-
   return products.map((product) => ({
     id: product.id,
   }));
@@ -34,7 +25,7 @@ export async function generateStaticParams() {
 export default async function ProductItemPage({
   params,
 }: {
-  params: { id: string; slug: string };
+  params: { id: string };
 }) {
   const product = await api.public.products.getOne({ id: params.id });
   if (!product) throw new Error("Product not found");
