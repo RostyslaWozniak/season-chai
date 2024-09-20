@@ -24,7 +24,7 @@ const features = [
 ];
 export const HeroSection = () => {
   return (
-    <div className="relative overflow-hidden bg-gradient-to-r from-green-50 to-green-100">
+    <div className="relative overflow-hidden bg-gradient-to-r from-primary/10 to-primary/20">
       <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:pb-24 sm:pt-32 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2">
           <div className="text-center md:text-left">

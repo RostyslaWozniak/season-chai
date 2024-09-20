@@ -13,7 +13,7 @@ export default async function RootLayout({
             className="h-full w-full object-cover object-[0,80%]"
           />
           <div className="absolute inset-0 bg-black bg-opacity-40">
-            <h1 className="mb-4 translate-x-10 translate-y-40 text-5xl font-bold text-card">
+            <h1 className="mb-4 translate-x-10 translate-y-40 text-5xl font-bold text-foreground">
               Discover the World of Tea
             </h1>
           </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { ShoppingCart } from "lucide-react";
+import { Minus, Plus, ShoppingCart } from "lucide-react";
 
 import { Button } from "../ui/button";
 import { Skeleton } from "../ui/skeleton";
@@ -38,23 +38,24 @@ export const AddToCartButton = ({ productId }: { productId: string }) => {
             <Button
               onClick={() => handleRemoveOneFromCart(productId)}
               variant="outline"
-              size="sm"
+              className="p-2"
             >
-              -
+              <Minus className="aspect-square w-6" />
             </Button>
             <p className="min-w-8 text-center">{clientQuantity}</p>
             <Button
               onClick={() => handleAddOneToCart(productId)}
               variant="outline"
-              size="sm"
+              className="p-2"
             >
-              +
+              <Plus className="aspect-square w-6" />
             </Button>
           </div>
         ) : (
           <Button
             variant="outline"
             onClick={() => handleAddOneToCart(productId)}
+            size="lg"
           >
             <ShoppingCart className="mr-2 h-4 w-4" />
             Add to Cart

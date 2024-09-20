@@ -9,7 +9,8 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { fileRouter } from "@/app/api/uploadthing/core";
 import CartProvider from "@/context/CartContext";
-import { Metadata } from "next";
+import { type Metadata } from "next";
+import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
   title: {
@@ -25,7 +26,7 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const session = await validateRequest();
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
+    <html lang="en" className={cn("", `${GeistSans.variable}`)}>
       <body className="overflow-x-hidden">
         <NextSSRPlugin routerConfig={extractRouterConfig(fileRouter)} />
         <TRPCReactProvider>
@@ -33,7 +34,7 @@ export default async function RootLayout({
             <CartProvider>
               <div className="flex min-h-screen flex-col">
                 <Header />
-                <main className="flex grow flex-col pt-20">{children}</main>
+                <main className="flex grow flex-col pt-14">{children}</main>
                 <Toaster />
               </div>
             </CartProvider>

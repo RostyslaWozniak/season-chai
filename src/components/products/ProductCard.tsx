@@ -38,7 +38,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         <InfoCard product={product} hideImageOnMobile />
       </DialogWrapper>
 
-      <Card className="group flex h-full flex-col overflow-hidden transition-all duration-300 hover:shadow-lg">
+      <Card className="flex h-full flex-col overflow-hidden transition-all duration-300 hover:shadow-lg">
         <CardHeader className="relative p-0">
           <Link
             key={product.id}
@@ -58,7 +58,22 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             label={product.category.name}
             className="absolute left-2 top-2"
           />
-          <div className="absolute right-2 top-2">
+        </CardHeader>
+        <CardContent className="relative grow border-t py-2">
+          <Link
+            key={product.id}
+            href={`/products/${product.id}`}
+            className="group flex h-full flex-col"
+          >
+            <h2 className="text-xl font-semibold capitalize group-hover:underline">
+              {product.name}
+            </h2>
+
+            <p className="line-clamp-2 overflow-hidden text-ellipsis text-muted-foreground">
+              {product.description}
+            </p>
+          </Link>
+          <div className="absolute right-0 top-1">
             <DropdownWrapper vertical className="w-min">
               <DropdownMenuItem onClick={() => setIsInfoOpen(true)}>
                 <IconMenu
@@ -69,22 +84,8 @@ export const ProductCard = ({ product }: ProductCardProps) => {
               </DropdownMenuItem>
             </DropdownWrapper>
           </div>
-        </CardHeader>
-        <Link
-          key={product.id}
-          href={`/products/${product.id}`}
-          className="flex h-full"
-        >
-          <CardContent className="grow border-t py-2">
-            <h2 className="text-xl font-semibold capitalize group-hover:underline">
-              {product.name}
-            </h2>
+        </CardContent>
 
-            <p className="line-clamp-2 overflow-hidden text-ellipsis text-muted-foreground">
-              {product.description}
-            </p>
-          </CardContent>
-        </Link>
         <CardFooter className="flex min-h-14 items-center justify-between border-t px-4 py-0">
           <span className="text-lg font-bold">
             {formatPrice(product.price)}

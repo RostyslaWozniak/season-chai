@@ -43,9 +43,9 @@ export const DropdownWrapper = ({
 }: DropdownWrapperProps) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="opacity-70 outline-none hover:opacity-100">
+      <DropdownMenuTrigger className="grid h-8 w-8 place-items-center opacity-70 outline-none hover:opacity-100">
         {vertical ? (
-          <MoreVertical className="right-3 top-3 h-5 w-5" />
+          <MoreVertical className="h-5 w-5" />
         ) : (
           <MoreHorizontal className="h-5 w-5" />
         )}

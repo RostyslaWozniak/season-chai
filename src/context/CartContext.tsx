@@ -3,6 +3,7 @@ import { api } from "@/trpc/react";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useSession } from "./SessionProvider";
+import { skipToken } from "@tanstack/react-query";
 
 interface CartContext {
   cartItems: CartItem[] | undefined;
@@ -36,9 +37,13 @@ export default function CartProvider({ children }: React.PropsWithChildren) {
   const [cartItems, setCartItems] = useState<CartItem[] | undefined>([]);
   const [products, setProducts] = useState<Product[] | undefined>([]);
 
+  const { user } = useSession();
+
   const { data: serverProducts } = api.public.products.getAll.useQuery();
 
-  const { mutate } = api.private.setCartItemQuantity.useMutation();
+  const mutation = user
+    ? api.private.setCartItemQuantity.useMutation()
+    : undefined;
 
   const handleAddOneToCart = (id: string) => {
     if (!cartItems?.find((item) => item.id === id)) {
@@ -72,7 +77,7 @@ export default function CartProvider({ children }: React.PropsWithChildren) {
         item.id === id ? { ...item, quantity: item.quantity - 1 } : item,
       );
       return newItems?.filter((item) => {
-        if (item.quantity === 0) mutate({ id, quantity: 0 });
+        if (item.quantity === 0) mutation?.mutate({ id, quantity: 0 });
         return item.quantity;
       });
     });
