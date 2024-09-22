@@ -22,5 +22,6 @@ export async function logout() {
     sessionCookie.attributes,
   );
   revalidatePath("/login");
+
   return redirect("/login");
 }

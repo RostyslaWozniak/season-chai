@@ -3,7 +3,6 @@ import { api } from "@/trpc/react";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useSession } from "./SessionProvider";
-import { skipToken } from "@tanstack/react-query";
 
 interface CartContext {
   cartItems: CartItem[] | undefined;
@@ -39,15 +38,24 @@ export default function CartProvider({ children }: React.PropsWithChildren) {
 
   const { user } = useSession();
 
-  const { data: serverProducts } = api.public.products.getAll.useQuery();
+  const { data: serverProducts } = api.public.products.getAll.useQuery(
+    undefined,
+    {
+      enabled: !!user,
+    },
+  );
 
-  const mutation = user
-    ? api.private.setCartItemQuantity.useMutation()
-    : undefined;
+  const { data: serverCartItems, isLoading: isLoadingCartItems } =
+    api.private.getCartItems.useQuery(undefined, {
+      enabled: !!user,
+    });
 
-  const handleAddOneToCart = (id: string) => {
-    if (!cartItems?.find((item) => item.id === id)) {
-      const newProduct = products?.find((item) => item.id === id);
+  const { mutate: deleteCartItem } = api.private.deleteCartItem.useMutation();
+
+  const handleAddOneToCart = (productId: string) => {
+    if (!cartItems?.find((item) => item.id === productId)) {
+      const newProduct = products?.find((item) => item.id === productId);
+
       setCartItems((prev) => {
         return [
           {
@@ -63,7 +71,7 @@ export default function CartProvider({ children }: React.PropsWithChildren) {
     } else {
       setCartItems((prev) => {
         return prev?.map((item) =>
-          item.id === id
+          item.id === productId
             ? { ...item, quantity: (item.quantity ?? 0) + 1 }
             : item,
         );
@@ -72,19 +80,15 @@ export default function CartProvider({ children }: React.PropsWithChildren) {
   };
 
   const handleRemoveOneFromCart = (id: string) => {
+    const item = cartItems?.find((item) => item.id === id);
+    if (item?.quantity ?? 0 - 1 < 1) deleteCartItem({ id });
     setCartItems((prev) => {
       const newItems = prev?.map((item) =>
         item.id === id ? { ...item, quantity: item.quantity - 1 } : item,
       );
-      return newItems?.filter((item) => {
-        if (item.quantity === 0) mutation?.mutate({ id, quantity: 0 });
-        return item.quantity;
-      });
+      return newItems?.filter((item) => item.quantity);
     });
   };
-
-  const { data: serverCartItems, isLoading: isLoadingCartItems } =
-    api.private.getCartItems.useQuery();
 
   useEffect(() => {
     setCartItems(serverCartItems);

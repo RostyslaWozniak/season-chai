@@ -2,10 +2,13 @@
 import { CartSheet } from "@/components/CartSheet";
 import { TransitionLink } from "../TransitionLink";
 import { UserButton } from "../UserButton";
+import { validateRequest } from "@/lib/auth";
+import { LoginButton } from "../auth/LoginButton";
 
 export default async function Header() {
+  const { user } = await validateRequest();
   return (
-    <header className="fixed top-0 z-[40] w-full bg-card/30 shadow-sm backdrop-blur-sm">
+    <header className="fixed top-0 z-[40] w-screen bg-card/30 shadow-sm backdrop-blur-sm">
       <div className="mx-auto flex flex-wrap items-center justify-between gap-5 px-5 py-2 lg:px-12">
         <TransitionLink
           href="/"
@@ -16,10 +19,14 @@ export default async function Header() {
             Season Chai
           </p>
         </TransitionLink>
-        <div className="flex items-center gap-5">
-          <CartSheet />
-          <UserButton />
-        </div>
+        {user ? (
+          <div className="flex items-center gap-5">
+            <CartSheet />
+            <UserButton user={user} />
+          </div>
+        ) : (
+          <LoginButton />
+        )}
       </div>
     </header>
   );

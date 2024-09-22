@@ -1,9 +1,10 @@
-import { createTRPCRouter, publicProcedure } from "../../trpc";
+import { TRPCError } from "@trpc/server";
+import { createTRPCRouter, privateProcedure } from "../../trpc";
 import { z } from "zod";
 
 export const privateRouter = createTRPCRouter({
   // GET CART ITEMS
-  getCartItems: publicProcedure.query(async ({ ctx }) => {
+  getCartItems: privateProcedure.query(async ({ ctx }) => {
     if (!ctx.userId) return [];
     const data = await ctx.db.cartItem.findMany({
       where: { carts: { user_id: ctx.userId }, quantity: { gt: 0 } },
@@ -33,7 +34,7 @@ export const privateRouter = createTRPCRouter({
   }),
 
   // GET QUANTITY OF CART ITEM
-  getQuantityOfCartItem: publicProcedure
+  getQuantityOfCartItem: privateProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const cartItem = await ctx.db.cartItem.findFirst({
@@ -49,7 +50,7 @@ export const privateRouter = createTRPCRouter({
       return cartItem.quantity;
     }),
 
-  setCartItemQuantity: publicProcedure
+  setCartItemQuantity: privateProcedure
     .input(z.object({ id: z.string(), quantity: z.number() }))
     .mutation(async ({ ctx, input }) => {
       const cart = await ctx.db.cart.findFirstOrThrow({
@@ -76,50 +77,21 @@ export const privateRouter = createTRPCRouter({
       }
     }),
 
-  // ADD ONE TO CART
-  addOneToCart: publicProcedure
-    .input(z.object({ productId: z.string() }))
+  // DELETE CART ITEM
+  deleteCartItem: privateProcedure
+    .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const cart = await ctx.db.cart.findFirstOrThrow({
         where: { user_id: ctx.userId },
       });
 
       const cartItem = await ctx.db.cartItem.findFirst({
-        where: { cart_id: cart.id, product_id: input.productId },
+        where: { cart_id: cart.id, product_id: input.id },
       });
+      if (!cartItem) throw new TRPCError({ code: "NOT_FOUND" });
 
-      if (cartItem) {
-        await ctx.db.cartItem.update({
-          where: { id: cartItem.id },
-          data: { quantity: { increment: 1 } },
-        });
-      } else {
-        await ctx.db.cartItem.create({
-          data: { cart_id: cart.id, product_id: input.productId, quantity: 1 },
-        });
-      }
-    }),
-
-  // REMOVE ONE FORM CART
-  removeOneFromCart: publicProcedure
-    .input(z.object({ id: z.string() }))
-    .mutation(async ({ ctx, input }) => {
-      const cartItem = await ctx.db.cartItem.findFirst({
-        where: {
-          carts: { user_id: ctx.userId },
-          product_id: input.id,
-        },
+      await ctx.db.cartItem.delete({
+        where: { id: cartItem.id },
       });
-
-      if (!cartItem) return null;
-
-      if (cartItem.quantity > 1) {
-        await ctx.db.cartItem.update({
-          where: { id: cartItem.id },
-          data: { quantity: { decrement: 1 } },
-        });
-      } else {
-        await ctx.db.cartItem.delete({ where: { id: cartItem.id } });
-      }
     }),
 });

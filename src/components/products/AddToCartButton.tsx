@@ -10,7 +10,8 @@ import { useEffect } from "react";
 import { api } from "@/trpc/react";
 
 export const AddToCartButton = ({ productId }: { productId: string }) => {
-  const { mutate } = api.private.setCartItemQuantity.useMutation();
+  const { mutate: setCartItemQuantity } =
+    api.private.setCartItemQuantity.useMutation();
 
   const {
     isLoadingCartItems,
@@ -27,8 +28,8 @@ export const AddToCartButton = ({ productId }: { productId: string }) => {
 
   useEffect(() => {
     if (debouncedQuantity === undefined) return;
-    mutate({ id: productId ?? "", quantity: debouncedQuantity ?? 0 });
-  }, [debouncedQuantity, mutate, productId]);
+    setCartItemQuantity({ id: productId, quantity: debouncedQuantity });
+  }, [debouncedQuantity, setCartItemQuantity, productId]);
 
   return (
     <div>
