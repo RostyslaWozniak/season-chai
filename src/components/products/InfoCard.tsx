@@ -41,6 +41,7 @@ export const InfoCard = ({
             className="mx-auto rounded-lg object-cover"
             src={product.image_url}
             alt={`Cover image of ${product.name}`}
+            priority
           />
         </div>
       </div>

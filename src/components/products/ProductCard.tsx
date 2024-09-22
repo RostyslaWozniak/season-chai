@@ -38,8 +38,13 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         <InfoCard product={product} hideImageOnMobile />
       </DialogWrapper>
 
-      <Card className="flex h-full flex-col overflow-hidden transition-all duration-300 hover:shadow-lg">
-        <CardHeader className="relative p-0">
+      <Card className="relative flex h-full flex-col overflow-hidden transition-all duration-300 hover:shadow-lg">
+        <TagLink
+          path={`/products?q=${slugifyString(product.category.name)}`}
+          label={product.category.name}
+          className="absolute left-2 top-2"
+        />
+        <CardHeader className="p-0">
           <Link
             key={product.id}
             href={`/products/${product.id}`}
@@ -53,11 +58,6 @@ export const ProductCard = ({ product }: ProductCardProps) => {
               className="aspect-square h-full w-full object-cover"
             />
           </Link>
-          <TagLink
-            path={`/products?q=${slugifyString(product.category.name)}`}
-            label={product.category.name}
-            className="absolute left-2 top-2"
-          />
         </CardHeader>
         <CardContent className="relative grow border-t py-2">
           <Link
