@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import { TransitionLink } from "../TransitionLink";
+import { motion } from "framer-motion";
 
 type FormContainerProps = {
   children: React.ReactNode;
@@ -21,10 +22,10 @@ export const FormContainer = ({
 }: FormContainerProps) => {
   return (
     <div className="flex max-h-[40rem] w-full max-w-[64rem] overflow-hidden rounded-2xl bg-card md:shadow-2xl">
-      <div className="mx-auto w-full max-w-[400px] space-y-10 overflow-y-auto px-5 md:w-1/2 md:p-10">
+      <div className="mx-auto w-full max-w-[400px] space-y-10 overflow-y-auto px-5 md:w-1/2 md:py-10">
         <div className="space-y-3">
           <h1 className="text-center text-2xl font-bold md:text-3xl">
-            {title} to Season Chai
+            {title} to <span className="text-primary">Season Chai</span>
           </h1>
           <p className="text-center text-sm text-muted-foreground md:text-base">
             {description}
@@ -40,11 +41,17 @@ export const FormContainer = ({
           </TransitionLink>
         </div>
       </div>
-      <img
-        src={imageUrl}
-        alt=""
-        className="hidden aspect-[9/10] w-1/2 object-cover object-[10%] duration-300 md:block"
-      />
+      <div className="hidden aspect-[9/10] w-1/2 bg-gray-300 duration-300 md:block">
+        <motion.img
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          src={imageUrl}
+          className="h-full w-full object-cover object-[10%]"
+          alt="nice tea image"
+          loading="lazy"
+        />
+      </div>
     </div>
   );
 };
