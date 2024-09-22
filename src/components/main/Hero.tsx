@@ -66,7 +66,8 @@ export const HeroSection = () => {
               height={450}
               src="/images/hero.svg"
               alt="Elegant tea set"
-              className="relative z-10 rounded-lg object-cover"
+              className="relative z-10 h-auto w-auto rounded-lg object-cover"
+              priority
             />
           </div>
         </div>

@@ -18,6 +18,8 @@ import { AddToCartButton } from "@/components/products/AddToCartButton";
 import { useSession } from "@/context/SessionProvider";
 import { useCart } from "@/context/CartContext";
 import { motion } from "framer-motion";
+import Link from "next/link";
+import { EmptyCart } from "./cart/EmptyCart";
 
 export function CartSheet() {
   const { cartItems } = useCart();
@@ -55,6 +57,8 @@ export function CartSheet() {
             You have {cartItems.length} items in your cart.
           </SheetDescription>
         </SheetHeader>
+        {cartItems.length === 0 && <EmptyCart />}
+
         <ScrollArea className="grid grow border-b px-4 pr-10">
           {cartItems.map((product) => (
             <motion.div
@@ -94,7 +98,9 @@ export function CartSheet() {
               Total Items: <span className="font-semibold">{totalItems}</span>
             </p>
           </div>
-          <Button className="mt-4">Proceed to Checkout</Button>
+          {cartItems.length > 0 ?? (
+            <Button className="mt-4">Proceed to Checkout</Button>
+          )}
         </div>
       </SheetContent>
     </Sheet>
