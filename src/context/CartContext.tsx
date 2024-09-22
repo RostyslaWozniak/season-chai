@@ -81,7 +81,10 @@ export default function CartProvider({ children }: React.PropsWithChildren) {
 
   const handleRemoveOneFromCart = (id: string) => {
     const item = cartItems?.find((item) => item.id === id);
-    if (item?.quantity ?? 0 - 1 < 1) deleteCartItem({ id });
+    // delete cart item when quantity is less than 1
+    if ((item?.quantity ?? 0) - 1 < 1) {
+      deleteCartItem({ id });
+    }
     setCartItems((prev) => {
       const newItems = prev?.map((item) =>
         item.id === id ? { ...item, quantity: item.quantity - 1 } : item,

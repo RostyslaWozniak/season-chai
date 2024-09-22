@@ -1,13 +1,11 @@
 "use client";
 
-import { Minus, Plus, ShoppingCart } from "lucide-react";
-
-import { Button } from "../ui/button";
-import { Skeleton } from "../ui/skeleton";
-import { useCart } from "@/context/CartContext";
-import { useDebounce } from "@/hooks/use-debounce";
 import { useEffect } from "react";
 import { api } from "@/trpc/react";
+import { useDebounce } from "@/hooks/use-debounce";
+import { useCart } from "@/context/CartContext";
+import { Button } from "../ui/button";
+import { Minus, Plus, ShoppingCart } from "lucide-react";
 
 export const AddToCartButton = ({ productId }: { productId: string }) => {
   const { mutate: setCartItemQuantity } =
@@ -32,14 +30,15 @@ export const AddToCartButton = ({ productId }: { productId: string }) => {
   }, [debouncedQuantity, setCartItemQuantity, productId]);
 
   return (
-    <div>
+    <>
       {!isLoadingCartItems ? (
         clientQuantity ? (
           <div className="flex items-center gap-3 text-2xl font-bold">
             <Button
               onClick={() => handleRemoveOneFromCart(productId)}
               variant="outline"
-              className="p-2"
+              className="p-2 active:scale-105"
+              size="lg"
             >
               <Minus className="aspect-square w-6" />
             </Button>
@@ -47,7 +46,8 @@ export const AddToCartButton = ({ productId }: { productId: string }) => {
             <Button
               onClick={() => handleAddOneToCart(productId)}
               variant="outline"
-              className="p-2"
+              className="p-2 active:scale-105"
+              size="lg"
             >
               <Plus className="aspect-square w-6" />
             </Button>
@@ -57,14 +57,13 @@ export const AddToCartButton = ({ productId }: { productId: string }) => {
             variant="outline"
             onClick={() => handleAddOneToCart(productId)}
             size="lg"
+            className="active:scale-105"
           >
             <ShoppingCart className="mr-2 h-4 w-4" />
             Add to Cart
           </Button>
         )
-      ) : (
-        <Skeleton className="h-8 w-32" />
-      )}
-    </div>
+      ) : null}
+    </>
   );
 };
