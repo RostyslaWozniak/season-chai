@@ -11,7 +11,7 @@ type TagLinkProps = {
 export const TagLink = ({ path, label, className }: TagLinkProps) => {
   return (
     <div>
-      <Link href={path} className={cn("", className)}>
+      <Link href={path} className={cn("text-nowrap", className)}>
         <Badge>{label}</Badge>
       </Link>
     </div>

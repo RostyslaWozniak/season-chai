@@ -17,39 +17,41 @@ export default async function ProductsPage({
 }: {
   searchParams?: { q: string };
 }) {
-  const categories = (await api.public.categories.getAllCategories()).map(
-    (category) => category.name,
-  );
+  const categories = await api.public.categories.getAllCategories();
 
   const categoryName = searchParams?.q ?? "all";
 
-  const products = await api.public.products.getProductsByCategoryName({
-    name: categoryName.replace("-", " "),
+  const currentCutegoryId = categories.find(
+    (category) => category.name === categoryName.replaceAll("-", " "),
+  )?.id;
+
+  const products = await api.public.products.getProductsByCategoryId({
+    id: currentCutegoryId ?? "",
   });
 
   return (
     <div className="container mx-auto mb-20 max-w-7xl">
       <div className="my-4 grid grid-cols-2 flex-wrap sm:grid-cols-4 lg:flex">
-        {["all", ...categories].map((category) => (
+        {[...categories].map((category) => (
           <Link
             className={cn(
               buttonVariants({
                 variant:
-                  categoryName.replace("-", " ") === category.toLowerCase()
+                  categoryName.replace("-", " ") === category.name.toLowerCase()
                     ? "default"
                     : "outline",
                 size: "lg",
               }),
               "mb-2 mr-2 text-lg",
             )}
-            key={category}
+            key={category.id}
             href={
-              category === "all"
+              category.name === "all"
                 ? "/products"
-                : `/products?q=${slugifyString(category)}`
+                : `/products?q=${slugifyString(category.name)}`
             }
           >
-            {category}
+            {category.name}
           </Link>
         ))}
       </div>

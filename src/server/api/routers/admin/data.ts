@@ -3,43 +3,47 @@ import { adminProcedure, createTRPCRouter } from "../../trpc";
 export const dataRouter = createTRPCRouter({
   // GET OVERVIEW FOR ADMIN DASHBOARD
   getOverview: adminProcedure.query(async ({ ctx }) => {
-    const totalCustomers = await ctx.db.user.count({
-      where: { role: "USER" },
-    });
-    const totalProducts = await ctx.db.product.count();
-
-    const totalOrders = await ctx.db.cart.findMany({
-      select: {
-        cart_items: {
-          where: { quantity: { gt: 0 } },
+    const [
+      totalCustomers,
+      totalProducts,
+      totalOrders,
+      minStock,
+      maxStock,
+      totalStock,
+    ] = await Promise.all([
+      ctx.db.user.count({
+        where: { role: "USER" },
+      }),
+      ctx.db.product.count(),
+      ctx.db.cart.findMany({
+        select: {
+          cart_items: {
+            where: { quantity: { gt: 0 } },
+          },
         },
-      },
-    });
-
-    const totalRevenue = 0;
-
-    const minStock = await ctx.db.product.findMany({
-      orderBy: { stock: "asc" },
-      select: { stock: true, name: true },
-      take: 1,
-    });
-    const maxStock = await ctx.db.product.findMany({
-      orderBy: { stock: "desc" },
-      select: { stock: true, name: true },
-      take: 1,
-    });
-
-    const totalStock = await ctx.db.product.aggregate({
-      _sum: {
-        stock: true,
-      },
-    });
+      }),
+      ctx.db.product.findMany({
+        orderBy: { stock: "asc" },
+        select: { stock: true, name: true },
+        take: 1,
+      }),
+      ctx.db.product.findMany({
+        orderBy: { stock: "desc" },
+        select: { stock: true, name: true },
+        take: 1,
+      }),
+      ctx.db.product.aggregate({
+        _sum: {
+          stock: true,
+        },
+      }),
+    ]);
 
     return {
       totalCustomers,
       totalProducts,
       totalOrders: totalOrders.length,
-      totalRevenue,
+      totalRevenue: 0,
       minStock,
       maxStock,
       totalStock: totalStock._sum.stock ?? 0,

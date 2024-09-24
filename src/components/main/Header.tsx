@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { CartSheet } from "@/components/CartSheet";
+import { CartSheet } from "@/components/cart/CartSheet";
 import { TransitionLink } from "../TransitionLink";
 import { UserButton } from "../UserButton";
 import { validateRequest } from "@/lib/auth";

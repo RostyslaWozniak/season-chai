@@ -12,7 +12,7 @@ export const CreateNewProduct = () => {
   return (
     <>
       <DialogWrapper
-        title="Edit Product"
+        title="Create Product"
         description="Make changes to your product here. Do not forget to save changes."
         isOpen={isOpen}
         setIsOpen={setIsOpen}

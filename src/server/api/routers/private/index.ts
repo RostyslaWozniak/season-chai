@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, privateProcedure } from "../../trpc";
 import { z } from "zod";
+import { orderRouter } from "./order";
 
 export const privateRouter = createTRPCRouter({
   // GET CART ITEMS
@@ -30,6 +31,7 @@ export const privateRouter = createTRPCRouter({
         quantity,
       };
     });
+
     return cartItems;
   }),
 
@@ -50,6 +52,7 @@ export const privateRouter = createTRPCRouter({
       return cartItem.quantity;
     }),
 
+  // set cart item quantity
   setCartItemQuantity: privateProcedure
     .input(z.object({ id: z.string(), quantity: z.number() }))
     .mutation(async ({ ctx, input }) => {
@@ -94,4 +97,5 @@ export const privateRouter = createTRPCRouter({
         where: { id: cartItem.id },
       });
     }),
+  order: orderRouter,
 });

@@ -3,6 +3,8 @@ import { validateRequest } from "@/lib/auth";
 import { Sidebar } from "./_components/Sidebar";
 import { type Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: {
     template: "Admin | %s | Season Chai",

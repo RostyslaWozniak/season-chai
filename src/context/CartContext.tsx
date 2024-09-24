@@ -9,6 +9,7 @@ interface CartContext {
   isLoadingCartItems: boolean;
   handleAddOneToCart: (id: string) => void;
   handleRemoveOneFromCart: (id: string) => void;
+  handleRemoveCartItem: (id: string) => void;
 }
 type CartItem = {
   id: string;
@@ -93,6 +94,13 @@ export default function CartProvider({ children }: React.PropsWithChildren) {
     });
   };
 
+  const handleRemoveCartItem = (id: string) => {
+    setCartItems((prev) => {
+      return prev?.filter((item) => item.id !== id);
+    });
+    deleteCartItem({ id });
+  };
+
   useEffect(() => {
     setCartItems(serverCartItems);
   }, [serverCartItems]);
@@ -107,6 +115,7 @@ export default function CartProvider({ children }: React.PropsWithChildren) {
         cartItems,
         handleRemoveOneFromCart,
         handleAddOneToCart,
+        handleRemoveCartItem,
       }}
     >
       {children}

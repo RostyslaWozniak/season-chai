@@ -1,4 +1,4 @@
-import { getAllProducts } from "@/actions/products";
+import { getAllProducts } from "@/server/actions/products";
 import { CategoriesView } from "@/components/products/CategoriesView";
 import { InfoCard } from "@/components/products/InfoCard";
 

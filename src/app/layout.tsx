@@ -34,7 +34,9 @@ export default async function RootLayout({
             <CartProvider>
               <div className="flex min-h-screen flex-col">
                 <Header />
-                <main className="flex grow flex-col pt-14">{children}</main>
+                <main className="flex w-screen grow flex-col pt-14">
+                  {children}
+                </main>
                 <Toaster />
               </div>
             </CartProvider>

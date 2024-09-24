@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -8,18 +8,19 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  SheetClose,
 } from "@/components/ui/sheet";
 import { formatPrice } from "@/helpers";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
-// import { api } from "@/trpc/react";
 import { AddToCartButton } from "@/components/products/AddToCartButton";
 import { useSession } from "@/context/SessionProvider";
 import { useCart } from "@/context/CartContext";
 import { motion } from "framer-motion";
-import Link from "next/link";
-import { EmptyCart } from "./cart/EmptyCart";
+import { EmptyCart } from "./EmptyCart";
+import { cn } from "@/lib/utils";
+import { RemoveCartItem } from "./RemoveCartItem";
 
 export function CartSheet() {
   const { cartItems } = useCart();
@@ -64,7 +65,7 @@ export function CartSheet() {
             <motion.div
               layout
               key={product.id}
-              className="grid grid-cols-3 overflow-hidden border-b py-4"
+              className="flex items-center justify-between overflow-hidden border-b py-4"
             >
               <Image
                 width={100}
@@ -74,14 +75,16 @@ export function CartSheet() {
                 className="mx-auto aspect-square object-cover"
               />
 
-              <div className="col-span-2 flex flex-col items-start justify-center p-4">
-                <div className="flex grow flex-col justify-center">
-                  <p className="text-lg">{product.name}</p>
-                  <p className="text-muted-foreground">
-                    {formatPrice(product.price)}
-                  </p>
+              <div className="flex grow items-end justify-center p-4">
+                <div className="flex w-full flex-col items-start justify-between">
+                  {product.name}
+                  <AddToCartButton productId={product.id} />
                 </div>
-                <AddToCartButton productId={product.id} />
+                <div className="w-full grow text-center text-xl text-muted-foreground">
+                  {formatPrice(product.price)}
+                </div>
+
+                <RemoveCartItem productId={product.id} />
               </div>
             </motion.div>
           ))}
@@ -98,8 +101,18 @@ export function CartSheet() {
               Total Items: <span className="font-semibold">{totalItems}</span>
             </p>
           </div>
-          {cartItems.length > 0 ?? (
-            <Button className="mt-4">Proceed to Checkout</Button>
+          {cartItems.length > 0 && (
+            <SheetClose asChild>
+              <a
+                href="/checkout"
+                className={cn(
+                  buttonVariants({ variant: "default", size: "lg" }),
+                  "mt-4",
+                )}
+              >
+                Proceed to Checkout
+              </a>
+            </SheetClose>
           )}
         </div>
       </SheetContent>

@@ -35,3 +35,7 @@ export const slugifyString = (str: string) => {
     .replace(/-+/g, "-"); // remove consecutive hyphens
   return str;
 };
+
+export const convertToSubcurrency = (amount: number, factor = 100) => {
+  return Math.round(amount * factor);
+};
