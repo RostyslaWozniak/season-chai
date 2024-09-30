@@ -73,9 +73,16 @@ export default function ProductsPage() {
         </div>
       )}
       {!productsPending ? (
-        <div className="grid min-h-[400px] grid-cols-1 place-items-center gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid min-h-[400px] grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
           {filteredProducts.length === 0 ? (
-            <p className="col-span-3 text-center text-2xl">No products found</p>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="col-span-3 text-center text-3xl"
+            >
+              No products found
+            </motion.p>
           ) : (
             filteredProducts.map((product, i) => (
               <motion.div
