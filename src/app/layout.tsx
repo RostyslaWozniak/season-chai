@@ -11,6 +11,7 @@ import { fileRouter } from "@/app/api/uploadthing/core";
 import CartProvider from "@/context/CartContext";
 import { type Metadata } from "next";
 import { cn } from "@/lib/utils";
+import ProductsProvider from "@/context/ProductsContext";
 
 export const metadata: Metadata = {
   title: {
@@ -30,16 +31,20 @@ export default async function RootLayout({
       <body className="overflow-x-hidden">
         <NextSSRPlugin routerConfig={extractRouterConfig(fileRouter)} />
         <TRPCReactProvider>
+          {/* context providers */}
           <SessionProvider value={session}>
-            <CartProvider>
-              <div className="flex min-h-screen flex-col">
-                <Header />
-                <main className="flex w-screen grow flex-col pt-14">
-                  {children}
-                </main>
-                <Toaster />
-              </div>
-            </CartProvider>
+            <ProductsProvider>
+              <CartProvider>
+                {/* context providers  */}
+                <div className="flex min-h-screen flex-col">
+                  <Header />
+                  <main className="flex w-screen grow flex-col pt-14">
+                    {children}
+                  </main>
+                  <Toaster />
+                </div>
+              </CartProvider>
+            </ProductsProvider>
           </SessionProvider>
         </TRPCReactProvider>
       </body>
