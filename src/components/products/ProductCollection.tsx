@@ -1,28 +1,23 @@
-import { api } from "@/trpc/server";
-import { type Category } from "@prisma/client";
 import { ProductCard } from "./ProductCard";
 import Link from "next/link";
 import IconMenu from "../IconMenu";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "../ui/button";
-import { slugifyString } from "@/helpers";
+import { type PublicProductWithCategory } from "@/server/helpers/public";
 
 export const ProductCollection = async ({
-  category,
+  title,
+  products,
 }: {
-  category: Category;
+  title: string;
+  products: PublicProductWithCategory[];
 }) => {
-  const products = await api.public.products.getProductsByCategoryId({
-    id: category.id,
-    take: 3,
-  });
-  if (!products || products.length < 3) return null;
   return (
     <div className="container mx-auto max-w-7xl px-4 pb-10">
       <div className="mb-14 text-center">
         <h2 className="mb-4 text-4xl font-bold capitalize text-primary">
-          Our {category.name} Collection
+          {title}
         </h2>
         <p className="text-xl text-muted-foreground">
           Discover our carefully curated selection of premium teas from around
@@ -35,7 +30,7 @@ export const ProductCollection = async ({
         ))}
       </div>
       <Link
-        href={`/products?q=${slugifyString(category.name)}`}
+        href={`/products`}
         className={cn(
           buttonVariants({ size: "lg", variant: "link" }),
           "float-right mt-4",

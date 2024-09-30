@@ -8,7 +8,7 @@ import { api } from "@/trpc/server";
 
 export async function generateMetadata({ params }: { params: { id: string } }) {
   const { id } = params;
-  const product = await api.public.products.getOne({ id });
+  const product = await api.public.products.getOneProduct({ id });
 
   return {
     title: `${product.name}`,
@@ -28,7 +28,7 @@ export default async function ProductItemPage({
 }: {
   params: { id: string };
 }) {
-  const product = await api.public.products.getOne({ id: params.id });
+  const product = await api.public.products.getOneProduct({ id: params.id });
   if (!product) throw new Error("Product not found");
 
   const categories = await api.public.categories.getAllCategories();
@@ -37,7 +37,7 @@ export default async function ProductItemPage({
       <InfoCard product={product} />
       <div className="flex w-full grid-cols-5 flex-col gap-10 lg:grid lg:gap-20">
         <div className="col-span-4">
-          <RelatedProducts categoryId={product.category.id} id={product.id} />
+          <RelatedProducts categorySlug={product.category.slug} />
         </div>
         <div className="col-span-1">
           <CategoriesView categories={categories} />

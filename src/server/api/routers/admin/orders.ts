@@ -7,7 +7,7 @@ export const ordersRouter = createTRPCRouter({
       select: {
         id: true,
         users: true,
-        created_at: true,
+        createdAt: true,
         _count: {
           select: { cart_items: true },
         },
@@ -18,5 +18,26 @@ export const ordersRouter = createTRPCRouter({
     });
 
     return carts;
+  }),
+
+  getAllOrders: adminProcedure.query(async ({ ctx }) => {
+    const orders = await ctx.db.order.findMany({
+      select: {
+        id: true,
+        user: { select: { username: true, email: true } },
+        createdAt: true,
+        _count: {
+          select: { orderItems: true },
+        },
+        orderItems: {
+          select: { quantity: true, product: true },
+        },
+        totalPrice: true,
+        status: true,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return orders;
   }),
 });

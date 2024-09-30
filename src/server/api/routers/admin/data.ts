@@ -1,4 +1,6 @@
+import { TRPCError } from "@trpc/server";
 import { adminProcedure, createTRPCRouter } from "../../trpc";
+import { mainSettingsSchema } from "@/lib/validation/adminSettings";
 
 export const dataRouter = createTRPCRouter({
   // GET OVERVIEW FOR ADMIN DASHBOARD
@@ -7,19 +9,22 @@ export const dataRouter = createTRPCRouter({
       totalCustomers,
       totalProducts,
       totalOrders,
+      totalRevenue,
       minStock,
       maxStock,
       totalStock,
     ] = await Promise.all([
-      ctx.db.user.count({
-        where: { role: "USER" },
-      }),
+      ctx.db.user.count(),
       ctx.db.product.count(),
-      ctx.db.cart.findMany({
-        select: {
-          cart_items: {
-            where: { quantity: { gt: 0 } },
+      ctx.db.order.count(),
+      ctx.db.order.aggregate({
+        where: {
+          createdAt: {
+            gte: new Date(new Date().setDate(new Date().getDate() - 30)),
           },
+        },
+        _sum: {
+          totalPrice: true,
         },
       }),
       ctx.db.product.findMany({
@@ -42,8 +47,8 @@ export const dataRouter = createTRPCRouter({
     return {
       totalCustomers,
       totalProducts,
-      totalOrders: totalOrders.length,
-      totalRevenue: 0,
+      totalOrders,
+      totalRevenue: Number(totalRevenue._sum.totalPrice) ?? 0,
       minStock,
       maxStock,
       totalStock: totalStock._sum.stock ?? 0,
@@ -51,22 +56,42 @@ export const dataRouter = createTRPCRouter({
   }),
 
   // GET SALES DATA
-  getSalesData: adminProcedure.query(async () => {
-    // moc data ...
-    const data = [
-      { name: "Sep", sales: 300 },
-      { name: "Oct", sales: 500 },
-      { name: "Nov", sales: 450 },
-      { name: "Dec", sales: 600 },
-      { name: "Jan", sales: 550 },
-      { name: "Feb", sales: 400 },
-      { name: "Mar", sales: 300 },
-      { name: "Apr", sales: 450 },
-      { name: "May", sales: 600 },
-      { name: "Jun", sales: 550 },
-      { name: "Jul", sales: 400 },
-      { name: "Aug", sales: 400 },
-    ];
-    return data;
+  getSalesData: adminProcedure.query(async ({ ctx }) => {
+    const data = await ctx.db.order.findMany({
+      orderBy: { createdAt: "desc" },
+      select: {
+        createdAt: true,
+        totalPrice: true,
+      },
+    });
+
+    return data.map(({ createdAt, totalPrice }) => {
+      return {
+        date: new Date(createdAt).toString().split(" ")[1],
+        price: Number(totalPrice ?? 0).toFixed(2),
+      };
+    });
   }),
+
+  getAdminSettings: adminProcedure.query(async ({ ctx }) => {
+    const data = await ctx.db.adminSettings.findMany();
+
+    if (!data) throw new TRPCError({ code: "NOT_FOUND" });
+    return {
+      lowStockAlertLevel: data[0]?.lowStockAlertLevel,
+      warningStockLevel: data[0]?.warningStockLevel,
+      taxRate: Number(data[0]?.taxRate),
+    };
+  }),
+
+  updateAdminSettings: adminProcedure
+    .input(mainSettingsSchema)
+    .mutation(async ({ ctx, input }) => {
+      const data = await ctx.db.adminSettings.findMany();
+      if (!data) throw new TRPCError({ code: "NOT_FOUND" });
+      return ctx.db.adminSettings.update({
+        where: { id: data[0]?.id },
+        data: input,
+      });
+    }),
 });

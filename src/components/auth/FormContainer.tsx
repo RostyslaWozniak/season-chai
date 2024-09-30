@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import { TransitionLink } from "../TransitionLink";
+import Link from "next/link";
 import { motion } from "framer-motion";
 
 type FormContainerProps = {
@@ -33,12 +33,9 @@ export const FormContainer = ({
         </div>
         <div className="space-y-5">
           {children}
-          <TransitionLink
-            href={href}
-            className="block text-center hover:underline"
-          >
+          <Link href={href} className="block text-center hover:underline">
             {linkLabel}
-          </TransitionLink>
+          </Link>
         </div>
       </div>
       <div className="hidden aspect-[9/10] w-1/2 bg-gray-300 duration-300 md:block">

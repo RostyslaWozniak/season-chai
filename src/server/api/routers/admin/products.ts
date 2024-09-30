@@ -58,8 +58,9 @@ export const productsRouter = createTRPCRouter({
           description: input.description,
           price: input.price,
           stock: input.stock,
-          image_url: input.image_url,
-          category_id: category.id,
+          imageUrl: input.imageUrl,
+          categoryId: category.id,
+          salePrice: input.salePrice === 0 ? null : input.salePrice,
         },
       });
 
@@ -87,8 +88,9 @@ export const productsRouter = createTRPCRouter({
           description: input.description,
           price: input.price,
           stock: input.stock,
-          image_url: input.image_url,
-          category_id: category.id,
+          imageUrl: input.imageUrl,
+          categoryId: category.id,
+          salePrice: input.salePrice === 0 ? null : input.salePrice,
         },
       });
 
@@ -112,7 +114,7 @@ export const productsRouter = createTRPCRouter({
     .input(z.object({ id: z.string(), take: z.number().default(3) }))
     .query(async ({ ctx, input }) => {
       const products = await ctx.db.product.findMany({
-        where: { category_id: input.id },
+        where: { categoryId: input.id },
         take: input.take,
       });
       if (!products) throw new TRPCError({ code: "NOT_FOUND" });

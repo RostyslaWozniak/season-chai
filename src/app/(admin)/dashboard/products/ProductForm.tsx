@@ -35,6 +35,7 @@ import {
 import { cn } from "@/lib/utils";
 import { FormButton } from "../../_components/FormButton";
 import { type AdminProductWithCategory } from "@/server/helpers/admin";
+import { CURRENCY } from "@/helpers/constant";
 
 type ProductFormProps = {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -53,8 +54,9 @@ export const ProductForm = ({ product, setIsOpen }: ProductFormProps) => {
       name: product?.name ?? "",
       description: product?.description ?? "",
       price: product?.price ?? 0,
+      salePrice: product?.salePrice ?? 0,
       stock: product?.stock ?? 0,
-      image_url: product?.image_url ?? "",
+      imageUrl: product?.imageUrl ?? "",
       category: product?.category.name ?? "",
     },
   });
@@ -132,21 +134,39 @@ export const ProductForm = ({ product, setIsOpen }: ProductFormProps) => {
               </FormItem>
             )}
           />
-
-          {/* price */}
-          <FormField
-            control={form.control}
-            name="price"
-            render={({ field }) => (
-              <FormItem className="h-24">
-                <FormLabel>Price*</FormLabel>
-                <FormControl>
-                  <Input placeholder="9.99" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="flex gap-3">
+            {/* price */}
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem className="h-24">
+                  <FormLabel>Price*</FormLabel>
+                  <FormControl>
+                    <Input placeholder={`9.99 in ${CURRENCY}`} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/*sale price */}
+            <FormField
+              control={form.control}
+              name="salePrice"
+              render={({ field }) => (
+                <FormItem className="h-24">
+                  <FormLabel>
+                    Sale Price{" "}
+                    <span className="text-muted-foreground">(optional)</span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input placeholder={`9.99 in ${CURRENCY}`} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           {/* category */}
           <FormField
             control={form.control}
@@ -221,7 +241,7 @@ export const ProductForm = ({ product, setIsOpen }: ProductFormProps) => {
           {/* productImage */}
           <FormField
             control={form.control}
-            name="image_url"
+            name="imageUrl"
             render={({ field }) => (
               <FormItem className="relative flex flex-col items-start gap-2">
                 <FormLabel>Image*</FormLabel>

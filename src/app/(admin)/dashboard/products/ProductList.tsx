@@ -9,22 +9,21 @@ import {
   TableBody,
   TableCell,
 } from "@/components/ui/table";
-import { formatPrice, slugifyString } from "@/helpers";
+import { slugifyString } from "@/helpers";
 import { Settings } from "lucide-react";
 import Image from "next/image";
 import { ProductTableSettings } from "./ProductTableSettings";
 import { cn } from "@/lib/utils";
-import {
-  PRODUCT_STOCK_MIN_THRESHOLD,
-  PRODUCT_STOCK_THRESHOLD,
-} from "@/helpers/constant";
 import { TagLink } from "@/components/TagLink";
 import { api } from "@/trpc/react";
 import { LoaderScreen } from "@/components/Loaders";
+import { PriceView } from "../../../../components/products/PriceView";
 
 export const ProductList = () => {
   const { data: products, isFetching } =
     api.admin.products.getAllProducts.useQuery();
+
+  const { data: settings } = api.admin.data.getAdminSettings.useQuery();
 
   return (
     <Card className="">
@@ -40,7 +39,7 @@ export const ProductList = () => {
               <TableRow>
                 <TableHead className="min-w-40">Name</TableHead>
                 <TableHead className="min-w-20">Image</TableHead>
-                <TableHead className="min-w-24">Price</TableHead>
+                <TableHead className="min-w-min">Price</TableHead>
                 <TableHead className="min-w-32">Category</TableHead>
                 <TableHead className="min-w-20">Stock</TableHead>
                 <TableHead>Description</TableHead>
@@ -56,14 +55,19 @@ export const ProductList = () => {
                     <TableCell>{product.name}</TableCell>
                     <TableCell>
                       <Image
-                        src={product.image_url}
+                        src={product.imageUrl}
                         alt={product.name}
                         width="64"
                         height="64"
                         className="aspect-square object-cover"
                       />
                     </TableCell>
-                    <TableCell>{formatPrice(product.price)}</TableCell>
+                    <TableCell>
+                      <PriceView
+                        price={product.price}
+                        salePrice={product.salePrice}
+                      />
+                    </TableCell>
                     <TableCell>
                       <TagLink
                         path={`/products?q=${slugifyString(product.category.name)}`}
@@ -73,21 +77,25 @@ export const ProductList = () => {
                     <TableCell
                       className={cn("", {
                         "font-bold text-destructive":
-                          product.stock < PRODUCT_STOCK_MIN_THRESHOLD,
+                          product.stock < (settings?.lowStockAlertLevel ?? 0),
                         "font-bold text-amber-500":
-                          product.stock < PRODUCT_STOCK_THRESHOLD &&
-                          product.stock >= PRODUCT_STOCK_MIN_THRESHOLD,
+                          product.stock < (settings?.warningStockLevel ?? 0) &&
+                          product.stock >= (settings?.lowStockAlertLevel ?? 0),
                       })}
                     >
                       {product.stock}
                     </TableCell>
                     <TableCell>
-                      <p className="line-clamp-3 w-[400px] overflow-hidden text-ellipsis">
+                      <p className="line-clamp-2 w-[400px] overflow-hidden text-ellipsis">
                         {product.description}
                       </p>
                     </TableCell>
                     <TableCell className="relative">
-                      <ProductTableSettings product={product} />
+                      <ProductTableSettings
+                        product={product}
+                        warningStockLevel={settings?.warningStockLevel ?? 0}
+                        lowStockAlertLevel={settings?.lowStockAlertLevel ?? 0}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}

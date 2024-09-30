@@ -1,4 +1,5 @@
 import { OverviewCards } from "@/components/OverviewCards";
+import { formatPrice } from "@/helpers";
 import { api } from "@/trpc/server";
 import { Package, Users, ShoppingCart, DollarSign } from "lucide-react";
 
@@ -27,7 +28,7 @@ export const AdminDashboardOverview = async () => {
     },
     {
       title: "Total Revenue",
-      value: totalRevenue,
+      value: formatPrice(totalRevenue),
       icon: DollarSign,
       description: "+20% from last month",
     },

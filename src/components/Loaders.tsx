@@ -21,7 +21,7 @@ export const LoaderScreen = ({ className }: { className?: string }) => {
   return (
     <div
       className={cn(
-        "absolute inset-0 z-50 flex items-center justify-center bg-background",
+        "absolute inset-0 z-50 flex h-lvh items-center justify-center bg-background",
         className,
       )}
     >

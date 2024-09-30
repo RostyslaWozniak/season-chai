@@ -14,7 +14,7 @@ export async function signUp(
   redirectPath: string | null,
 ): Promise<{ error: string | null; message: string | null }> {
   try {
-    const { username, email, password } = signUpSchema.parse(credentials);
+    const { email, password } = signUpSchema.parse(credentials);
 
     const passwordHash = await hash(password, {
       memoryCost: 19456,
@@ -24,21 +24,6 @@ export async function signUp(
     });
 
     const userId = generateIdFromEntropySize(10);
-
-    const existingUsername = await db.user.findFirst({
-      where: {
-        username: {
-          equals: username,
-        },
-      },
-    });
-
-    if (existingUsername) {
-      return {
-        error: "Username already taken",
-        message: null,
-      };
-    }
 
     const existingEmail = await db.user.findFirst({
       where: {
@@ -54,13 +39,13 @@ export async function signUp(
         message: null,
       };
     }
+    const username = /^([^@]*)@/.exec(email)?.[1];
 
     await db.user.create({
       data: {
         id: userId,
-        username,
-        displayName: username,
         email,
+        username,
         passwordHash,
         role: "USER",
       },
@@ -68,7 +53,7 @@ export async function signUp(
 
     await db.cart.create({
       data: {
-        user_id: userId,
+        userId,
       },
     });
 

@@ -1,14 +1,17 @@
 import { z } from "zod";
-
 export const publicProductSchema = z.object({
   name: z.string().min(1, "Name is required!"),
   description: z.string().max(500, "Maximum 500 characters!"),
   price: z.coerce
     .number({ message: "Price must be a number! Example: 9.99" })
     .min(1, "Price is required!"),
-  image_url: z.string().min(1, "Image is required!"),
+  salePrice: z.coerce
+    .number({ message: "Price must be a number! Example: 9.99" })
+    .optional(),
+  imageUrl: z.string().min(1, "Image is required!"),
   category: z.string().min(1, "Required!"),
 });
+
 export type PublicProductSchema = z.infer<typeof publicProductSchema>;
 
 export const adminCreateProductSchema = publicProductSchema.extend({

@@ -24,28 +24,13 @@ export default function Footer() {
                   Home
                 </Link>
               </li>
-              <li>
-                <Link
-                  href="/services"
-                  className="transition-colors hover:text-gray-900"
-                >
-                  Services
-                </Link>
-              </li>
+
               <li>
                 <Link
                   href="/products"
                   className="transition-colors hover:text-gray-900"
                 >
                   Products
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
-                  className="transition-colors hover:text-gray-900"
-                >
-                  Contact
                 </Link>
               </li>
             </ul>

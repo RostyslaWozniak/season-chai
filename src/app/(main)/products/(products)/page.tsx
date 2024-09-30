@@ -19,44 +19,53 @@ export default async function ProductsPage({
 }) {
   const categories = await api.public.categories.getAllCategories();
 
-  const categoryName = searchParams?.q ?? "all";
+  const categorySlug = searchParams?.q;
 
-  const currentCutegoryId = categories.find(
-    (category) => category.name === categoryName.replaceAll("-", " "),
-  )?.id;
-
-  const products = await api.public.products.getProductsByCategoryId({
-    id: currentCutegoryId ?? "",
-  });
+  const products = categorySlug
+    ? await api.public.products.getProductsByCategorySlug({
+        slug: categorySlug,
+        take: 9,
+        skip: 0,
+      })
+    : await api.public.products.getAllProductsWithPagination({
+        take: 9,
+        skip: 0,
+      });
 
   return (
     <div className="container mx-auto mb-20 max-w-7xl">
       <div className="my-4 grid grid-cols-2 flex-wrap sm:grid-cols-4 lg:flex">
+        <Link
+          href="/products"
+          className={cn(
+            buttonVariants({
+              variant: !categorySlug ? "default" : "outline",
+              size: "lg",
+            }),
+            "mb-2 mr-2 text-lg",
+          )}
+        >
+          All
+        </Link>
+
         {[...categories].map((category) => (
           <Link
             className={cn(
               buttonVariants({
-                variant:
-                  categoryName.replace("-", " ") === category.name.toLowerCase()
-                    ? "default"
-                    : "outline",
+                variant: categorySlug === category.slug ? "default" : "outline",
                 size: "lg",
               }),
               "mb-2 mr-2 text-lg",
             )}
             key={category.id}
-            href={
-              category.name === "all"
-                ? "/products"
-                : `/products?q=${slugifyString(category.name)}`
-            }
+            href={`/products?q=${slugifyString(category.name)}`}
           >
             {category.name}
           </Link>
         ))}
       </div>
 
-      <div className="grid min-h-[300px] grid-cols-1 place-items-center gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid min-h-[300px] grid-cols-1 place-items-center gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
         {products.length === 0 ? (
           <p className="col-span-3 text-center text-2xl">No products found</p>
         ) : (

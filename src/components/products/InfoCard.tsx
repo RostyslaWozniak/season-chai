@@ -1,24 +1,18 @@
-import {
-  formatPrettyDate,
-  formatPrettyTime,
-  formatPrice,
-  slugifyString,
-} from "@/helpers";
+import { formatPrettyDate, formatPrettyTime, slugifyString } from "@/helpers";
 import Image from "next/image";
 import { TagLink } from "../TagLink";
 import { type PublicProductWithCategory } from "@/server/helpers/public";
 import { cn } from "@/lib/utils";
 import IconMenu from "../IconMenu";
-import {
-  PRODUCT_STOCK_MIN_THRESHOLD,
-  PRODUCT_STOCK_THRESHOLD,
-} from "@/helpers/constant";
 import { Calendar, Clock, Package } from "lucide-react";
 import CartBtn from "./CartBtn";
+import { PriceView } from "./PriceView";
 
 export const InfoCard = ({
   product,
   hideImageOnMobile = false,
+  warningStockLevel,
+  lowStockAlertLevel,
 }: {
   product: PublicProductWithCategory & {
     stock?: number;
@@ -26,6 +20,8 @@ export const InfoCard = ({
     createdAt?: Date;
   };
   hideImageOnMobile?: boolean;
+  warningStockLevel?: number;
+  lowStockAlertLevel?: number;
 }) => {
   return (
     <div className="flex grid-cols-5 flex-col gap-8 p-4 py-4 md:grid">
@@ -39,7 +35,7 @@ export const InfoCard = ({
             width={500}
             height={500}
             className="mx-auto rounded-lg object-cover"
-            src={product.image_url}
+            src={product.imageUrl}
             alt={`Cover image of ${product.name}`}
             priority
           />
@@ -64,11 +60,12 @@ export const InfoCard = ({
             <IconMenu
               icon={Package}
               text={`Stok: ${product.stock}`}
-              className={cn("cursor-default text-muted-foreground", {
-                "text-destructive": product.stock < PRODUCT_STOCK_MIN_THRESHOLD,
-                "text-amber-500":
-                  product.stock < PRODUCT_STOCK_THRESHOLD &&
-                  product.stock >= PRODUCT_STOCK_MIN_THRESHOLD,
+              className={cn("", {
+                "font-bold text-destructive":
+                  product.stock < (lowStockAlertLevel ?? 0),
+                "font-bold text-amber-500":
+                  product.stock < (warningStockLevel ?? 0) &&
+                  product.stock >= (lowStockAlertLevel ?? 0),
               })}
             />
           )}
@@ -88,9 +85,12 @@ export const InfoCard = ({
           )}
         </div>
         <div className="flex items-center justify-between">
-          <p className="text-2xl font-bold text-primary">
-            {formatPrice(product.price)}
-          </p>
+          <PriceView
+            price={product.price}
+            salePrice={product.salePrice}
+            horizontal
+            className="flex-row-reverse"
+          />
           {!product.stock && <CartBtn productId={product.id} />}
         </div>
       </div>

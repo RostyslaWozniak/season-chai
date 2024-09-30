@@ -19,6 +19,7 @@ export const formatPrettyDate = (date: Date | null) => {
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+
 dayjs.extend(relativeTime);
 
 export const formatPrettyTime = (date: Date | null) => {
@@ -38,4 +39,16 @@ export const slugifyString = (str: string) => {
 
 export const convertToSubcurrency = (amount: number, factor = 100) => {
   return Math.round(amount * factor);
+};
+
+export const getTotalPriceWithTax = (totalPrice: number, taxRate: number) => {
+  const tax = Number(totalPrice) * Number(taxRate);
+
+  const totalPriceWithTax = Number(totalPrice) + tax;
+
+  return {
+    totalPriceWithTax,
+    tax,
+    totalPrice,
+  };
 };

@@ -21,36 +21,45 @@ import { motion } from "framer-motion";
 import { EmptyCart } from "./EmptyCart";
 import { cn } from "@/lib/utils";
 import { RemoveCartItem } from "./RemoveCartItem";
+import { PriceView } from "../products/PriceView";
 
 export function CartSheet() {
-  const { cartItems } = useCart();
+  const { cartItems, totalItems, totalPrice } = useCart();
 
   const { user } = useSession();
   if (!user) return null;
 
   if (!cartItems) return null;
 
-  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0,
-  );
-
   return (
     <Sheet>
       <SheetTrigger asChild>
         <Button variant="outline" size="icon" className="relative rounded-full">
-          <ShoppingCart />
+          <motion.div
+            key={
+              cartItems.reduce((sum, item) => sum + item.quantity, 0) + 1 * 10
+            }
+            initial={cartItems.length > 0}
+            animate={{ rotate: [0, -5, 5, -5, 5, 0] }}
+          >
+            <ShoppingCart />
+          </motion.div>
           {totalItems > 0 && (
-            <span className="absolute -bottom-2 -right-2 aspect-square h-5 rounded-full bg-primary text-primary-foreground">
+            <motion.span
+              key={cartItems.length + 1}
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0 }}
+              className="absolute -bottom-2 -right-2 aspect-square h-5 rounded-full bg-primary text-primary-foreground"
+            >
               {cartItems.length}
-            </span>
+            </motion.span>
           )}
         </Button>
       </SheetTrigger>
       <SheetContent
         side="right"
-        className="flex w-full flex-col gap-0 p-0 sm:min-w-[500px]"
+        className="flex w-[min(100%,500px)] flex-col gap-0 p-0 sm:min-w-[500px]"
       >
         <SheetHeader className="my-0 border-b-2 px-0 py-2 sm:p-4">
           <SheetTitle>Your Cart</SheetTitle>
@@ -60,7 +69,7 @@ export function CartSheet() {
         </SheetHeader>
         {cartItems.length === 0 && <EmptyCart />}
 
-        <ScrollArea className="grid grow border-b px-4 pr-10">
+        <ScrollArea className="grid grow border-b sm:px-4 sm:pr-10">
           {cartItems.map((product) => (
             <motion.div
               layout
@@ -70,29 +79,35 @@ export function CartSheet() {
               <Image
                 width={100}
                 height={100}
-                src={product.image_url}
+                src={product.imageUrl}
                 alt={product.name}
                 className="mx-auto aspect-square object-cover"
               />
 
-              <div className="flex grow items-end justify-center p-4">
+              <div className="flex grow gap-2 p-2 sm:p-4">
                 <div className="flex w-full flex-col items-start justify-between">
-                  {product.name}
+                  <div className="">{product.name}</div>
                   <AddToCartButton productId={product.id} />
                 </div>
-                <div className="w-full grow text-center text-xl text-muted-foreground">
-                  {formatPrice(product.price)}
+                <div className="flex w-full grow flex-wrap items-center justify-between">
+                  <PriceView
+                    price={product.price}
+                    salePrice={product.salePrice}
+                    className="min-w-20 self-end text-xl"
+                  />
+                  <div className="self-end">
+                    <RemoveCartItem productId={product.id} />
+                  </div>
                 </div>
-
-                <RemoveCartItem productId={product.id} />
               </div>
             </motion.div>
           ))}
         </ScrollArea>
-        <div className="flex items-center justify-between p-4 md:py-8">
+        <div className="flex flex-col justify-between p-4 sm:flex-row sm:items-center md:py-8">
           <div>
             <p className="text-xl">
               {"Total Price: "}
+
               <span className="font-bold text-primary">
                 {formatPrice(totalPrice)}
               </span>

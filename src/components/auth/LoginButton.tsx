@@ -1,14 +1,11 @@
 import { cn } from "@/lib/utils";
-import { TransitionLink } from "../TransitionLink";
 import { buttonVariants } from "../ui/button";
+import Link from "next/link";
 
 export const LoginButton = () => {
   return (
-    <TransitionLink
-      href="/login"
-      className={cn(buttonVariants({ variant: "default" }))}
-    >
+    <Link href="/login" className={cn(buttonVariants({ variant: "default" }))}>
       Login
-    </TransitionLink>
+    </Link>
   );
 };

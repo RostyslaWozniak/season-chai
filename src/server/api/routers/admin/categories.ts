@@ -5,6 +5,7 @@ import {
 import { adminProcedure, createTRPCRouter } from "../../trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { slugifyString } from "@/helpers";
 
 export const categoriesRouter = createTRPCRouter({
   // GET ALL CATEGORIES
@@ -24,6 +25,7 @@ export const categoriesRouter = createTRPCRouter({
       const category = await ctx.db.category.create({
         data: {
           name: input.category,
+          slug: slugifyString(input.category),
         },
       });
 

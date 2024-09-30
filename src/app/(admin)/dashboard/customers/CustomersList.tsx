@@ -1,19 +1,22 @@
+"use client";
+
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
   Table,
-  TableHeader,
-  TableRow,
-  TableHead,
   TableBody,
   TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
-import { api } from "@/trpc/server";
+import { formatPrice } from "@/helpers";
+import { api } from "@/trpc/react";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { User } from "lucide-react";
 import Image from "next/image";
 
-export const CustomersList = async () => {
-  const users = await api.admin.users.getAllUsers();
+export const CustomersList = () => {
+  const { data: carts } = api.admin.orders.getAllCarts.useQuery();
   return (
     <Card>
       <CardHeader>
@@ -23,23 +26,25 @@ export const CustomersList = async () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="min-w-40">Name</TableHead>
-              <TableHead className="min-w-20">Image</TableHead>
-              <TableHead className="min-w-24">Email</TableHead>
-              <TableHead className="min-w-20">Orders</TableHead>
-              <TableHead className="min-w-20">Current Orders</TableHead>
+              <TableHead className="w-min">Name</TableHead>
+              <TableHead className="w-min">Image</TableHead>
+              <TableHead className="w-min">Email</TableHead>
+              <TableHead className="min-w-20">Items in Cart</TableHead>
+              <TableHead className="min-w-20">Total in Cart</TableHead>
+              <TableHead className="min-w-20">Status</TableHead>
+              <TableHead className="min-w-20">Price</TableHead>
               <TableHead align="right">Edit</TableHead>
             </TableRow>
           </TableHeader>
-          {users && (
+          {carts && (
             <TableBody>
-              {users.map(({ displayName, email, avatarUrl, id }) => (
-                <TableRow key={id}>
-                  <TableCell>{displayName}</TableCell>
+              {carts.map(({ users, _count, cart_items }) => (
+                <TableRow key={users.id}>
+                  <TableCell>{users.username}</TableCell>
                   <TableCell>
-                    {avatarUrl ? (
+                    {users.avatarUrl ? (
                       <Image
-                        src={avatarUrl}
+                        src={users.avatarUrl}
                         alt="User avatar"
                         className="aspect-square h-12 object-cover"
                       />
@@ -47,9 +52,27 @@ export const CustomersList = async () => {
                       <User />
                     )}
                   </TableCell>
-                  <TableCell>{email}</TableCell>
-                  <TableCell>2</TableCell>
-                  <TableCell>0</TableCell>
+                  <TableCell>{users.email}</TableCell>
+                  <TableCell>{_count.cart_items}</TableCell>
+                  <TableCell>
+                    {cart_items.reduce((acc, item) => acc + item.quantity, 0)}
+                  </TableCell>
+                  <TableCell>
+                    {_count.cart_items ? (
+                      <div className="aspect-square h-2 rounded-full bg-emerald-500" />
+                    ) : (
+                      <div className="aspect-square h-2 rounded-full bg-amber-500" />
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {formatPrice(
+                      cart_items.reduce(
+                        (acc, item) =>
+                          acc + item.quantity * Number(item.products.price),
+                        0,
+                      ),
+                    )}
+                  </TableCell>
                   <TableCell>
                     <button>
                       <DotsHorizontalIcon className="h-5 w-5" />

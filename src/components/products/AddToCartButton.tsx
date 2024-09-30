@@ -9,7 +9,7 @@ import { Minus, Plus, ShoppingCart } from "lucide-react";
 
 export const AddToCartButton = ({ productId }: { productId: string }) => {
   const { mutate: setCartItemQuantity } =
-    api.private.setCartItemQuantity.useMutation();
+    api.private.cart.setCartItemQuantity.useMutation();
 
   const {
     isLoadingCartItems,
@@ -22,7 +22,7 @@ export const AddToCartButton = ({ productId }: { productId: string }) => {
     (item) => item.id === productId,
   )?.quantity;
 
-  const debouncedQuantity = useDebounce(clientQuantity, 500);
+  const debouncedQuantity = useDebounce(clientQuantity, 1000);
 
   useEffect(() => {
     if (debouncedQuantity === undefined) return;
@@ -33,7 +33,7 @@ export const AddToCartButton = ({ productId }: { productId: string }) => {
     <>
       {!isLoadingCartItems ? (
         clientQuantity ? (
-          <div className="flex items-center gap-3 text-2xl font-bold">
+          <div className="flex items-center gap-1 text-2xl font-bold">
             <Button
               onClick={() => handleRemoveOneFromCart(productId)}
               variant="outline"

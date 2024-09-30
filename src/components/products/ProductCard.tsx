@@ -6,7 +6,6 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { formatPrice, slugifyString } from "@/helpers";
 import { DropdownWrapper } from "@/components/DropdownWrapper";
 import IconMenu from "@/components/IconMenu";
 import { InfoIcon } from "lucide-react";
@@ -19,6 +18,7 @@ import { TagLink } from "../TagLink";
 import { type PublicProductWithCategory } from "@/server/helpers/public";
 
 import CartBtn from "./CartBtn";
+import { PriceView } from "./PriceView";
 
 type ProductCardProps = {
   product: PublicProductWithCategory;
@@ -40,7 +40,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
 
       <Card className="relative flex h-full flex-col overflow-hidden transition-all duration-300 hover:shadow-lg">
         <TagLink
-          path={`/products?q=${slugifyString(product.category.name)}`}
+          path={`/products?q=${product.category.slug}`}
           label={product.category.name}
           className="absolute left-2 top-2"
         />
@@ -53,7 +53,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
             <Image
               width={400}
               height={400}
-              src={product.image_url}
+              src={product.imageUrl}
               alt={product.name}
               className="aspect-square h-full w-full object-cover"
             />
@@ -87,9 +87,11 @@ export const ProductCard = ({ product }: ProductCardProps) => {
         </CardContent>
 
         <CardFooter className="flex min-h-14 items-center justify-between border-t px-4 py-0">
-          <span className="text-lg font-bold">
-            {formatPrice(product.price)}
-          </span>
+          <PriceView
+            price={product.price}
+            salePrice={product.salePrice}
+            horizontal
+          />
           <CartBtn productId={product.id} />
         </CardFooter>
       </Card>

@@ -22,27 +22,39 @@ import {
 } from "@/components/ui/card";
 import { formatPrice } from "@/helpers";
 import { LeafLoader } from "@/components/Loaders";
+import { type RouterOutputs } from "@/trpc/react";
+import { api } from "@/trpc/react";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
 );
 
-type CheckoutFormProps = { totalPrice: number; clientSecret: string };
+type CheckoutFormProps = {
+  totalPrice: number;
+  clientSecret: string;
+  items: RouterOutputs["private"]["cart"]["getCartItems"];
+};
 
-export function CheckoutForm({ totalPrice, clientSecret }: CheckoutFormProps) {
+export function CheckoutForm({
+  totalPrice,
+  clientSecret,
+  items,
+}: CheckoutFormProps) {
   return (
     <Elements stripe={stripePromise} options={{ clientSecret }}>
-      <Form totalPrice={totalPrice} clientSecret={clientSecret} />
+      <Form totalPrice={totalPrice} clientSecret={clientSecret} items={items} />
     </Elements>
   );
 }
 
-function Form({ totalPrice, clientSecret }: CheckoutFormProps) {
+function Form({ totalPrice, clientSecret, items }: CheckoutFormProps) {
   const stripe = useStripe();
   const elements = useElements();
 
   const [errorMessage, setErrorMessage] = useState<string>();
   const [loading, setLoading] = useState(false);
+
+  const { mutate } = api.private.order.createOrder.useMutation();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -79,10 +91,7 @@ function Form({ totalPrice, clientSecret }: CheckoutFormProps) {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="mx-auto flex w-[min(100%,500px)] flex-col"
-    >
+    <form onSubmit={handleSubmit} className="mx-auto flex w-full flex-col">
       <Card>
         <CardHeader>
           <CardTitle className="text-xl">Payment Information</CardTitle>
@@ -105,7 +114,16 @@ function Form({ totalPrice, clientSecret }: CheckoutFormProps) {
           )}
         </CardContent>
         <CardFooter>
-          <Button className="w-full" disabled={loading || !stripe || !elements}>
+          <Button
+            className="w-full"
+            disabled={loading || !stripe || !elements}
+            onClick={() =>
+              mutate({
+                cartItems: items,
+                totalPrice,
+              })
+            }
+          >
             {loading ? (
               <Loader2 className="animate-spin" />
             ) : (

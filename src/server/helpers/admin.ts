@@ -1,7 +1,7 @@
 import { type Product } from "@prisma/client";
 
 export type ProductWithCategory = Product & {
-  category: { name: string; id: string };
+  category: { name: string; slug: string };
 };
 
 export const filterProductsForAdmin = (products: ProductWithCategory[]) => {
@@ -10,12 +10,13 @@ export const filterProductsForAdmin = (products: ProductWithCategory[]) => {
       id: product.id,
       name: product.name,
       description: product.description,
-      image_url: product.image_url,
+      imageUrl: product.imageUrl,
       price: Number(product.price),
-      category: { name: product.category.name, id: product.category.id },
+      salePrice: product.salePrice ? Number(product.salePrice) : null,
+      category: { name: product.category.name, slug: product.category.slug },
       stock: product.stock,
-      updatedAt: product.updated_at,
-      createdAt: product.created_at,
+      updatedAt: product.updatedAt,
+      createdAt: product.createdAt,
     };
   });
 };
@@ -25,12 +26,13 @@ export const filterOneProductForAdmin = (product: ProductWithCategory) => {
     id: product.id,
     name: product.name,
     description: product.description,
-    image_url: product.image_url,
+    imageUrl: product.imageUrl,
     price: Number(product.price),
-    category: { name: product.category.name, id: product.category.id },
+    salePrice: product.salePrice ? Number(product.salePrice) : null,
+    category: { name: product.category.name, slug: product.category.slug },
     stock: product.stock,
-    updatedAt: product.updated_at,
-    createdAt: product.created_at,
+    updatedAt: product.updatedAt,
+    createdAt: product.createdAt,
   };
 };
 

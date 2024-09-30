@@ -2,16 +2,14 @@ import { api } from "@/trpc/server";
 import { SmallProductCard } from "./SmallProductCard";
 
 export const RelatedProducts = async ({
-  categoryId,
-  id,
+  categorySlug,
 }: {
-  categoryId: string;
-  id: string;
+  categorySlug: string;
 }) => {
-  const products = await api.public.products.getRelatedProducts({
-    categoryId,
+  const products = await api.public.products.getProductsByCategorySlug({
+    slug: categorySlug,
     take: 2,
-    id,
+    skip: Math.random() * (3 - 0) + 0,
   });
 
   if (!products || products.length === 0) return null;

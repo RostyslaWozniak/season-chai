@@ -28,7 +28,6 @@ export default function SignUpForm() {
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       email: "",
-      username: "",
       password: "",
     },
   });
@@ -52,23 +51,6 @@ export default function SignUpForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Username"
-                  autoComplete="username"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           control={form.control}
           name="email"

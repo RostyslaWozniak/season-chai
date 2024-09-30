@@ -6,15 +6,18 @@ import React from "react";
 type FormButtonProps = {
   isLoading: boolean;
   label: string;
+  isDisabled?: boolean;
   className?: string;
 };
 export const FormButton = ({
   isLoading,
+  isDisabled = false,
   label,
   className,
 }: FormButtonProps) => {
   return (
     <Button
+      disabled={isLoading || isDisabled}
       className={cn(
         "flex w-20 items-center justify-center self-end justify-self-end",
         className,

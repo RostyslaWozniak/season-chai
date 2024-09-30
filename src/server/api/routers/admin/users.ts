@@ -7,7 +7,7 @@ export const usersRouter = createTRPCRouter({
       select: {
         id: true,
         email: true,
-        displayName: true,
+        username: true,
         avatarUrl: true,
         createdAt: true,
       },

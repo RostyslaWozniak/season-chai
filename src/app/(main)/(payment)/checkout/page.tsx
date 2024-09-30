@@ -1,18 +1,20 @@
 import Stripe from "stripe";
 
 import { api } from "@/trpc/server";
-import { convertToSubcurrency } from "@/helpers";
+import { convertToSubcurrency, getTotalPriceWithTax } from "@/helpers";
 import { CURRENCY } from "@/helpers/constant";
-import { CheckoutForm } from "./_components/CheckoutFrom";
 import { OrderSummary } from "./_components/OrderSummary";
+import { AddressAndPaymentForm } from "./_components/AddressAndPaymentForm";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export default async function CheckoutPage() {
-  const cartItems = await api.private.getCartItems();
+  const cartItems = await api.private.cart.getCartItems();
+
+  const { taxRate } = await api.private.data.getTax();
 
   const totalPrice = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
+    (total, item) => total + (item.salePrice ?? item.price) * item.quantity,
     0,
   );
 
@@ -27,16 +29,33 @@ export default async function CheckoutPage() {
     throw new Error("Stripe failed to create payment intent.");
   }
 
-  return (
-    <div className="container mx-auto mb-32 mt-10 p-4">
-      <h1 className="mb-8 text-3xl font-bold">Checkout</h1>
-      <div className="flex flex-wrap gap-8">
-        <OrderSummary items={cartItems} totalPrice={totalPrice} />
+  const { tax, totalPriceWithTax } = getTotalPriceWithTax(totalPrice, taxRate);
 
-        <CheckoutForm
-          totalPrice={totalPrice}
-          clientSecret={paymantIntent.client_secret}
-        />
+  const userDetails = await api.private.data.getUserDetails();
+
+  return (
+    <div className="container mx-auto my-10 p-2 lg:mb-32">
+      <h1 className="mb-8 text-center text-3xl font-bold sm:text-start">
+        Checkout
+      </h1>
+      {/* <div className="flex flex-col items-center justify-between gap-8 lg:flex-row lg:items-end"> */}
+      <div className="grid gap-10 xl:grid-cols-5 2xl:gap-20 2xl:px-10">
+        <div className="lg:col-span-3">
+          <OrderSummary
+            items={cartItems}
+            totalPrice={totalPrice}
+            totalPriceWithTax={totalPriceWithTax}
+            tax={tax}
+          />
+        </div>
+        <div className="lg:col-span-2 lg:self-end">
+          <AddressAndPaymentForm
+            items={cartItems}
+            userDetails={userDetails}
+            totalPriceWithTax={totalPriceWithTax}
+            clientSecret={paymantIntent.client_secret}
+          />
+        </div>
       </div>
     </div>
   );

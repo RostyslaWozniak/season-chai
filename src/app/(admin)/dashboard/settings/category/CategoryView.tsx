@@ -1,7 +1,6 @@
 import { TagLink } from "@/components/TagLink";
 import { cn } from "@/lib/utils";
 import { type Category } from "@prisma/client";
-import { slugifyString } from "@/helpers";
 
 import { CategorySettings } from "./CategorySettings";
 
@@ -23,7 +22,7 @@ export const CategoryView = ({
             className="flex items-center justify-between gap-4"
           >
             <TagLink
-              path={`/products?q=${slugifyString(category.name)}`}
+              path={`/products?q=${category.slug}`}
               label={category.name}
             />
             <CategorySettings category={category} />

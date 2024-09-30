@@ -5,7 +5,7 @@ export const imagesRouter = createTRPCRouter({
   getAllImages: adminProcedure.query(async ({ ctx }) => {
     const images = await ctx.db.product.findMany({
       select: {
-        image_url: true,
+        imageUrl: true,
       },
     });
     return images;

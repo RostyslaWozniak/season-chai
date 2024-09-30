@@ -6,9 +6,10 @@ export const filterProductsForPublic = (products: ProductWithCategory[]) => {
       id: product.id,
       name: product.name,
       description: product.description,
-      image_url: product.image_url,
+      imageUrl: product.imageUrl,
       price: Number(product.price),
-      category: { name: product.category.name, id: product.category.id },
+      salePrice: product.salePrice ? Number(product.salePrice) : null,
+      category: { name: product.category.name, slug: product.category.slug },
     };
   });
 };
@@ -18,9 +19,10 @@ export const filterOneProductForPublic = (product: ProductWithCategory) => {
     id: product.id,
     name: product.name,
     description: product.description,
-    image_url: product.image_url,
+    imageUrl: product.imageUrl,
     price: Number(product.price),
-    category: { name: product.category.name, id: product.category.id },
+    salePrice: product.salePrice ? Number(product.salePrice) : null,
+    category: { name: product.category.name, slug: product.category.slug },
   };
 };
 

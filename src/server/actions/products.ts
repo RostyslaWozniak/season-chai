@@ -15,14 +15,14 @@ export const getCartItems = async () => {
   const { user } = await validateRequest();
 
   const cartItems = await db.cartItem.findMany({
-    where: { carts: { user_id: user?.id }, quantity: { gt: 0 } },
+    where: { carts: { userId: user?.id }, quantity: { gt: 0 } },
     include: {
       products: {
         select: {
           id: true,
           name: true,
           price: true,
-          image_url: true,
+          imageUrl: true,
         },
       },
     },

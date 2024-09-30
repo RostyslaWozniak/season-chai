@@ -1,17 +1,63 @@
-import { TRPCError } from "@trpc/server";
 import { createTRPCRouter, privateProcedure } from "../../trpc";
 import { z } from "zod";
-import { api } from "@/trpc/server";
+
+const schema = z.object({
+  totalPrice: z.number(),
+  cartItems: z.array(
+    z.object({
+      productsId: z.string(),
+      name: z.string(),
+      price: z.number(),
+      salePrice: z.number().nullable(),
+      imageUrl: z.string(),
+      quantity: z.number(),
+    }),
+  ),
+});
 
 export const orderRouter = createTRPCRouter({
-  //   createOrder: privateProcedure.query(async ({ ctx }) => {
-  //     const cart = await ctx.db.cart.findFirstOrThrow({
-  //       where: { user_id: ctx.userId },
-  //     });
-  //     const cartItems = await ctx.db.cartItem.findMany({
-  //       where: { cart_id: cart.id, quantity: { gt: 0 } },
-  //     });
-  //     const order = await ctx.db.order.create({
-  //     })
-  //   }),
+  createOrder: privateProcedure
+    .input(schema)
+    .mutation(async ({ ctx, input }) => {
+      const cart = await ctx.db.cart.findFirstOrThrow({
+        where: { userId: ctx.userId },
+      });
+      const address = await ctx.db.deliveryAddress.findFirstOrThrow({
+        where: { userId: ctx.userId },
+      });
+
+      const order = await ctx.db.order.create({
+        data: {
+          userId: ctx.userId,
+          totalPrice: input.totalPrice,
+          addressId: address.id,
+        },
+      });
+
+      await Promise.all(
+        input.cartItems.map((item) =>
+          ctx.db.product.update({
+            where: { id: item.productsId },
+            data: { stock: { decrement: item.quantity } },
+          }),
+        ),
+      );
+
+      const orderItems = input.cartItems.map((item) => {
+        return {
+          orderId: order.id,
+          productId: item.productsId,
+          quantity: item.quantity,
+          unitPrice: item.salePrice ?? item.price,
+        };
+      });
+
+      await ctx.db.cartItem.deleteMany({
+        where: { cartId: cart.id },
+      });
+
+      await ctx.db.orderItem.createMany({
+        data: orderItems,
+      });
+    }),
 });

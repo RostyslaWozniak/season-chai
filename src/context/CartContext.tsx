@@ -1,34 +1,21 @@
 "use client";
-import { api } from "@/trpc/react";
+import { api, type RouterOutputs } from "@/trpc/react";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useSession } from "./SessionProvider";
 
-interface CartContext {
+type CartItem = RouterOutputs["private"]["cart"]["getCartItems"][number];
+
+type Product = RouterOutputs["public"]["products"]["getAllProducts"][number];
+
+type CartContext = {
   cartItems: CartItem[] | undefined;
   isLoadingCartItems: boolean;
+  totalItems: number;
+  totalPrice: number;
   handleAddOneToCart: (id: string) => void;
   handleRemoveOneFromCart: (id: string) => void;
   handleRemoveCartItem: (id: string) => void;
-}
-type CartItem = {
-  id: string;
-  name: string;
-  price: number;
-  image_url: string;
-  quantity: number;
-};
-
-type Product = {
-  id: string;
-  name: string;
-  description: string | null;
-  image_url: string;
-  price: number;
-  category: {
-    name: string;
-    id: string;
-  };
 };
 
 const CartContext = createContext<CartContext | null>(null);
@@ -39,7 +26,7 @@ export default function CartProvider({ children }: React.PropsWithChildren) {
 
   const { user } = useSession();
 
-  const { data: serverProducts } = api.public.products.getAll.useQuery(
+  const { data: serverProducts } = api.public.products.getAllProducts.useQuery(
     undefined,
     {
       enabled: !!user,
@@ -47,11 +34,20 @@ export default function CartProvider({ children }: React.PropsWithChildren) {
   );
 
   const { data: serverCartItems, isLoading: isLoadingCartItems } =
-    api.private.getCartItems.useQuery(undefined, {
+    api.private.cart.getCartItems.useQuery(undefined, {
       enabled: !!user,
     });
 
-  const { mutate: deleteCartItem } = api.private.deleteCartItem.useMutation();
+  const { mutate: deleteCartItem } =
+    api.private.cart.deleteCartItem.useMutation();
+
+  const totalItems =
+    cartItems?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
+  const totalPrice =
+    cartItems?.reduce(
+      (sum, item) => sum + (item.salePrice ?? item.price) * item.quantity,
+      0,
+    ) ?? 0;
 
   const handleAddOneToCart = (productId: string) => {
     if (!cartItems?.find((item) => item.id === productId)) {
@@ -63,7 +59,8 @@ export default function CartProvider({ children }: React.PropsWithChildren) {
             id: newProduct?.id,
             name: newProduct?.name,
             price: newProduct?.price,
-            image_url: newProduct?.image_url,
+            salePrice: newProduct?.salePrice,
+            imageUrl: newProduct?.imageUrl,
             quantity: 1,
           },
           ...(prev ?? []),
@@ -111,8 +108,10 @@ export default function CartProvider({ children }: React.PropsWithChildren) {
   return (
     <CartContext.Provider
       value={{
-        isLoadingCartItems,
         cartItems,
+        isLoadingCartItems,
+        totalItems,
+        totalPrice,
         handleRemoveOneFromCart,
         handleAddOneToCart,
         handleRemoveCartItem,

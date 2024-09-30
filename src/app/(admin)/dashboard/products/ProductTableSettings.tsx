@@ -16,10 +16,14 @@ import { InfoCard } from "@/components/products/InfoCard";
 
 type ProductTableSettingsProps = {
   product: AdminProductWithCategory;
+  warningStockLevel: number;
+  lowStockAlertLevel: number;
 };
 
 export const ProductTableSettings = ({
   product,
+  warningStockLevel,
+  lowStockAlertLevel,
 }: ProductTableSettingsProps) => {
   const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -34,7 +38,12 @@ export const ProductTableSettings = ({
         className="flex w-[800px] flex-col gap-3"
         closeButton="Ok"
       >
-        <InfoCard product={product} hideImageOnMobile />
+        <InfoCard
+          product={product}
+          warningStockLevel={warningStockLevel}
+          lowStockAlertLevel={lowStockAlertLevel}
+          hideImageOnMobile
+        />
       </DialogWrapper>
       <DialogWrapper
         title="Edit Product"

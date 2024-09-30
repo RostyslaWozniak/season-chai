@@ -7,10 +7,11 @@ import {
 import { z } from "zod";
 
 export const productsRouter = createTRPCRouter({
-  getAll: publicProcedure.query(async ({ ctx }) => {
+  getAllProducts: publicProcedure.query(async ({ ctx }) => {
     const data = await ctx.db.product.findMany({
+      where: { stock: { gt: 0 } },
       orderBy: { name: "asc" },
-      include: { category: { select: { name: true, id: true } } },
+      include: { category: { select: { name: true, slug: true } } },
     });
     if (!data) throw new TRPCError({ code: "NOT_FOUND" });
 
@@ -18,12 +19,32 @@ export const productsRouter = createTRPCRouter({
 
     return products;
   }),
-  getOne: publicProcedure
+
+  getAllProductsWithPagination: publicProcedure
+    .input(
+      z.object({ take: z.number().default(9), skip: z.number().default(0) }),
+    )
+    .query(async ({ ctx /*input*/ }) => {
+      const data = await ctx.db.product.findMany({
+        where: { stock: { gt: 0 } },
+        orderBy: { name: "asc" },
+        include: { category: { select: { name: true, slug: true } } },
+        // take: input.take,
+        // skip: input.skip,
+      });
+      if (!data) throw new TRPCError({ code: "NOT_FOUND" });
+
+      const products = filterProductsForPublic(data);
+
+      return products;
+    }),
+
+  getOneProduct: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       const data = await ctx.db.product.findUnique({
-        where: { id: input.id },
-        include: { category: { select: { name: true, id: true } } },
+        where: { id: input.id, stock: { gt: 0 } },
+        include: { category: { select: { name: true, slug: true } } },
       });
       if (!data) throw new TRPCError({ code: "NOT_FOUND" });
 
@@ -32,74 +53,54 @@ export const productsRouter = createTRPCRouter({
       return product;
     }),
 
-  getRelatedProducts: publicProcedure
+  // GET PRODUCTS BY CATEGORY SLUG
+  getProductsByCategorySlug: publicProcedure
     .input(
       z.object({
-        categoryId: z.string(),
-        take: z.number(),
-        id: z.string(),
+        slug: z.string(),
+        take: z.number().default(9),
+        skip: z.number().default(0),
       }),
     )
     .query(async ({ ctx, input }) => {
       const data = await ctx.db.product.findMany({
-        where: { category_id: input.categoryId, id: { not: input.id } },
-        include: { category: { select: { name: true, id: true } } },
-        take: input.take,
+        where: { category: { slug: input.slug }, stock: { gt: 0 } },
+        include: { category: { select: { name: true, slug: true } } },
+        // take: input.take,
+        // skip: input.skip,
       });
-
-      if (!data) return [];
+      if (!data) throw new TRPCError({ code: "NOT_FOUND" });
       const products = filterProductsForPublic(data);
-
       return products;
     }),
 
-  getProductsByCategoryId: publicProcedure
-    .input(z.object({ id: z.string(), take: z.number().default(3) }))
+  // GET MOST POPULAR PRODUCTS
+  getPopularProducts: publicProcedure
+    .input(z.object({ take: z.number().default(3) }))
     .query(async ({ ctx, input }) => {
-      try {
-        const data = await ctx.db.product.findMany({
-          where: { category_id: input.id },
-          include: { category: { select: { name: true, id: true } } },
-          take: input.take,
-        });
-        if (!data) throw new TRPCError({ code: "NOT_FOUND" });
-
-        const products = filterProductsForPublic(data);
-        return products;
-      } catch (err) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: (err as Error).message,
-        });
-      }
+      const data = await ctx.db.product.findMany({
+        where: { stock: { gt: 0 } },
+        orderBy: { order_items: { _count: "desc" } },
+        include: { category: { select: { name: true, slug: true } } },
+        take: input.take,
+      });
+      if (!data) throw new TRPCError({ code: "NOT_FOUND" });
+      const products = filterProductsForPublic(data);
+      return products;
     }),
-  getProductsByCategoryName: publicProcedure
-    .input(z.object({ name: z.string(), take: z.number().default(9) }))
+
+  // GET NEWEST PRODUCTS
+  getNewestProducts: publicProcedure
+    .input(z.object({ take: z.number().default(3) }))
     .query(async ({ ctx, input }) => {
-      let products = [];
-      try {
-        products = await ctx.db.product.findMany({
-          where: { category: { name: input.name } },
-          include: { category: { select: { name: true, id: true } } },
-          take: input.take,
-        });
-
-        if (!products) throw new TRPCError({ code: "NOT_FOUND" });
-
-        if (input.name === "all")
-          products = await ctx.db.product.findMany({
-            include: { category: { select: { name: true, id: true } } },
-            take: input.take,
-          });
-
-        products = filterProductsForPublic(products);
-
-        return products;
-      } catch (err) {
-        throw new TRPCError({
-          code: "NOT_FOUND",
-          message: (err as Error).message,
-        });
-      }
+      const data = await ctx.db.product.findMany({
+        where: { stock: { gt: 0 } },
+        orderBy: { createdAt: "desc" },
+        include: { category: { select: { name: true, slug: true } } },
+        take: input.take,
+      });
+      if (!data) throw new TRPCError({ code: "NOT_FOUND" });
+      const products = filterProductsForPublic(data);
+      return products;
     }),
 });
