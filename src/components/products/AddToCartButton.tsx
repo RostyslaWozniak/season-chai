@@ -35,6 +35,7 @@ export const AddToCartButton = ({ productId }: { productId: string }) => {
         clientQuantity ? (
           <div className="flex items-center gap-1 text-2xl font-bold">
             <Button
+              onTouchStart={() => handleRemoveOneFromCart(productId)}
               onClick={() => handleRemoveOneFromCart(productId)}
               variant="outline"
               className="p-2 active:scale-105"
@@ -44,6 +45,7 @@ export const AddToCartButton = ({ productId }: { productId: string }) => {
             </Button>
             <p className="min-w-8 text-center">{clientQuantity}</p>
             <Button
+              onTouchStart={() => handleAddOneToCart(productId)}
               onClick={() => handleAddOneToCart(productId)}
               variant="outline"
               className="p-2 active:scale-105"
@@ -55,6 +57,7 @@ export const AddToCartButton = ({ productId }: { productId: string }) => {
         ) : (
           <Button
             variant="outline"
+            onTouchStart={() => handleAddOneToCart(productId)}
             onClick={() => handleAddOneToCart(productId)}
             size="lg"
             className="active:scale-105"

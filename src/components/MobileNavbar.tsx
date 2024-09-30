@@ -59,11 +59,11 @@ function NavItem({
   label: string;
   isActive: boolean;
 }) {
-  const navigate = useRouter();
+  const router = useRouter();
   return (
     <li>
       <Link
-        onTouchStart={() => navigate.push(href)}
+        onTouchStart={() => router.push(href)}
         href={href}
         className={cn(
           "pointer-events-auto flex flex-col items-center p-2 text-gray-600 transition-colors duration-200",

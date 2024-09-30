@@ -23,11 +23,13 @@ import { cn } from "@/lib/utils";
 import { RemoveCartItem } from "./RemoveCartItem";
 import { PriceView } from "../products/PriceView";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export function CartSheet() {
   const { cartItems, totalItems, totalPrice } = useCart();
 
   const { user } = useSession();
+  const router = useRouter();
 
   if (!user)
     return (
@@ -143,7 +145,8 @@ export function CartSheet() {
           </div>
           {cartItems.length > 0 && (
             <SheetClose asChild>
-              <a
+              <Link
+                onTouchStart={() => router.push("/checkout")}
                 href="/checkout"
                 className={cn(
                   buttonVariants({ variant: "default", size: "lg" }),
@@ -151,7 +154,7 @@ export function CartSheet() {
                 )}
               >
                 Proceed to Checkout
-              </a>
+              </Link>
             </SheetClose>
           )}
         </div>
