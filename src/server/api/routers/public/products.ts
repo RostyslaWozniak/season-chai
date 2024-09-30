@@ -76,13 +76,16 @@ export const productsRouter = createTRPCRouter({
 
   // GET MOST POPULAR PRODUCTS
   getPopularProducts: publicProcedure
-    .input(z.object({ take: z.number().default(3) }))
+    .input(
+      z.object({ take: z.number().default(3), skip: z.number().default(0) }),
+    )
     .query(async ({ ctx, input }) => {
       const data = await ctx.db.product.findMany({
         where: { stock: { gt: 0 } },
         orderBy: { order_items: { _count: "desc" } },
         include: { category: { select: { name: true, slug: true } } },
         take: input.take,
+        skip: input.skip,
       });
       if (!data) throw new TRPCError({ code: "NOT_FOUND" });
       const products = filterProductsForPublic(data);

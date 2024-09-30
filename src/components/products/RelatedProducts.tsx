@@ -1,15 +1,10 @@
 import { api } from "@/trpc/server";
 import { SmallProductCard } from "./SmallProductCard";
 
-export const RelatedProducts = async ({
-  categorySlug,
-}: {
-  categorySlug: string;
-}) => {
-  const products = await api.public.products.getProductsByCategorySlug({
-    slug: categorySlug,
+export const RelatedProducts = async () => {
+  const products = await api.public.products.getPopularProducts({
     take: 2,
-    skip: Math.random() * (3 - 0) + 0,
+    skip: Math.random() * (30 - 0) + 0,
   });
 
   if (!products || products.length === 0) return null;

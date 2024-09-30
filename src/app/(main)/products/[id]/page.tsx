@@ -37,7 +37,7 @@ export default async function ProductItemPage({
       <InfoCard product={product} />
       <div className="flex w-full grid-cols-5 flex-col gap-10 lg:grid lg:gap-20">
         <div className="col-span-4">
-          <RelatedProducts categorySlug={product.category.slug} />
+          <RelatedProducts />
         </div>
         <div className="col-span-1">
           <CategoriesView categories={categories} />

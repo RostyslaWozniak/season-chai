@@ -39,10 +39,11 @@ export const SmallProductCard = ({ product }: SmallProductCardProps) => {
         <div className="relative">
           <Link key={product.id} href={`/products/${product.id}`}>
             <Image
-              fill
+              width={150}
+              height={150}
               src={product.imageUrl}
               alt={product.name}
-              className="object-cover"
+              className="h-full w-full object-cover"
             />
           </Link>
         </div>
