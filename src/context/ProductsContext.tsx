@@ -9,6 +9,8 @@ type Product = RouterOutputs["public"]["products"]["getAllProducts"][number];
 type ProductsContext = {
   products: Product[];
   categories: Category[];
+  productsPending: boolean;
+  categoriesPending: boolean;
 };
 
 const ProductsContext = createContext<ProductsContext | null>(null);
@@ -19,9 +21,9 @@ export default function ProductsProvider({
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
 
-  const { data: serverProducts } =
+  const { data: serverProducts, isPending: productsPending } =
     api.public.products.getAllProducts.useQuery();
-  const { data: serverCategories } =
+  const { data: serverCategories, isPending: categoriesPending } =
     api.public.categories.getAllCategories.useQuery();
 
   useEffect(() => {
@@ -36,6 +38,8 @@ export default function ProductsProvider({
       value={{
         products,
         categories,
+        productsPending,
+        categoriesPending,
       }}
     >
       {children}

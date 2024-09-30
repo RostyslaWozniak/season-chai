@@ -1,5 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 
+import { type Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Products",
+};
+
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {

@@ -3,6 +3,7 @@ import { api, type RouterOutputs } from "@/trpc/react";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useSession } from "./SessionProvider";
+import { useProducts } from "./ProductsContext";
 
 type CartItem = RouterOutputs["private"]["cart"]["getCartItems"][number];
 
@@ -11,7 +12,7 @@ type Product = RouterOutputs["public"]["products"]["getAllProducts"][number];
 type CartContext = {
   cartItems: CartItem[] | undefined;
   isLoadingCartItems: boolean;
-  products: Product[] | undefined;
+  products: Product[];
   totalItems: number;
   totalPrice: number;
   handleAddOneToCart: (id: string) => void;
@@ -22,17 +23,11 @@ type CartContext = {
 const CartContext = createContext<CartContext | null>(null);
 
 export default function CartProvider({ children }: React.PropsWithChildren) {
+  const { products } = useProducts();
+
   const [cartItems, setCartItems] = useState<CartItem[] | undefined>([]);
-  const [products, setProducts] = useState<Product[] | undefined>([]);
 
   const { user } = useSession();
-
-  const { data: serverProducts } = api.public.products.getAllProducts.useQuery(
-    undefined,
-    {
-      enabled: !!user,
-    },
-  );
 
   const { data: serverCartItems, isLoading: isLoadingCartItems } =
     api.private.cart.getCartItems.useQuery(undefined, {
@@ -102,9 +97,6 @@ export default function CartProvider({ children }: React.PropsWithChildren) {
   useEffect(() => {
     setCartItems(serverCartItems);
   }, [serverCartItems]);
-  useEffect(() => {
-    setProducts(serverProducts);
-  }, [serverProducts]);
 
   return (
     <CartContext.Provider
