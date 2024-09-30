@@ -37,7 +37,7 @@ export default async function OrdersPage() {
           <CardHeader>
             <CardTitle className="text-xl font-bold">Your Orders</CardTitle>
           </CardHeader>
-          <CardContent className="min-h-[400px] grow p-0">
+          <CardContent className="min-h-[200px] grow p-0 md:min-h-[400px]">
             <Table className="relative mb-6">
               <TableHeader className="sticky top-0 z-20 bg-card shadow">
                 <TableRow>
