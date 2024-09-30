@@ -25,7 +25,3 @@ export const filterOneProductForPublic = (product: ProductWithCategory) => {
     category: { name: product.category.name, slug: product.category.slug },
   };
 };
-
-export type PublicProductWithCategory = ReturnType<
-  typeof filterOneProductForPublic
->;

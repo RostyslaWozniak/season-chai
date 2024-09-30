@@ -15,13 +15,12 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { TagLink } from "../TagLink";
-import { type PublicProductWithCategory } from "@/server/helpers/public";
-
 import CartBtn from "./CartBtn";
 import { PriceView } from "./PriceView";
+import { type RouterOutputs } from "@/trpc/react";
 
 type ProductCardProps = {
-  product: PublicProductWithCategory;
+  product: RouterOutputs["public"]["products"]["getOneProduct"];
 };
 
 export const ProductCard = ({ product }: ProductCardProps) => {

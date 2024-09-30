@@ -1,17 +1,17 @@
-import { ProductCard } from "./ProductCard";
 import Link from "next/link";
 import IconMenu from "../IconMenu";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "../ui/button";
-import { type PublicProductWithCategory } from "@/server/helpers/public";
+import { type RouterOutputs } from "@/trpc/react";
+import { ProductsView } from "./ProductsView";
 
 export const ProductCollection = async ({
   title,
   products,
 }: {
   title: string;
-  products: PublicProductWithCategory[];
+  products: RouterOutputs["public"]["products"]["getAllProducts"];
 }) => {
   return (
     <div className="container mx-auto max-w-7xl px-4 pb-10">
@@ -24,11 +24,7 @@ export const ProductCollection = async ({
           the world.
         </p>
       </div>
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
+      <ProductsView products={products} />
       <Link
         href={`/products`}
         className={cn(

@@ -1,12 +1,12 @@
 import { formatPrettyDate, formatPrettyTime, slugifyString } from "@/helpers";
 import Image from "next/image";
 import { TagLink } from "../TagLink";
-import { type PublicProductWithCategory } from "@/server/helpers/public";
 import { cn } from "@/lib/utils";
 import IconMenu from "../IconMenu";
 import { Calendar, Clock, Package } from "lucide-react";
 import CartBtn from "./CartBtn";
 import { PriceView } from "./PriceView";
+import { type RouterOutputs } from "@/trpc/react";
 
 export const InfoCard = ({
   product,
@@ -14,7 +14,7 @@ export const InfoCard = ({
   warningStockLevel,
   lowStockAlertLevel,
 }: {
-  product: PublicProductWithCategory & {
+  product: RouterOutputs["public"]["products"]["getOneProduct"] & {
     stock?: number;
     updatedAt?: Date | null;
     createdAt?: Date;
