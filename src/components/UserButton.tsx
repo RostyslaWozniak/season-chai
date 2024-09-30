@@ -2,7 +2,7 @@
 
 import { logout } from "@/app/(auth)/logout/actions";
 
-import { Lock, LogOutIcon } from "lucide-react";
+import { ClipboardList, Lock, LogOutIcon } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import {
@@ -42,8 +42,15 @@ export const UserButton = ({ user, className }: UserButtonProps) => {
           Logged in as{" "}
           <span className="font-bold capitalize">{user.username}</span>
         </DropdownMenuLabel>
+        <Link href={`/orders`} className="hidden md:block">
+          <DropdownMenuItem className="cursor-pointer">
+            <ClipboardList className="mr-2 size-4" />
+            Orders
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+        </Link>
         {user.role === "ADMIN" && (
-          <Link href={`/dashboard`}>
+          <Link href={`/dashboard`} className="hidden md:block">
             <DropdownMenuItem className="cursor-pointer">
               <Lock className="mr-2 size-4" />
               Admin

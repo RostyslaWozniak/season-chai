@@ -23,7 +23,7 @@ import { cn } from "@/lib/utils";
 import { RemoveCartItem } from "./RemoveCartItem";
 import { PriceView } from "../products/PriceView";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export function CartSheet() {
   const { cartItems, totalItems, totalPrice } = useCart();
