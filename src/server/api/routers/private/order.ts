@@ -60,4 +60,25 @@ export const orderRouter = createTRPCRouter({
         data: orderItems,
       });
     }),
+
+  getCurrrentUserOrders: privateProcedure.query(async ({ ctx }) => {
+    const orders = await ctx.db.order.findMany({
+      where: { userId: ctx.userId },
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        status: true,
+        createdAt: true,
+        totalPrice: true,
+        _count: {
+          select: { orderItems: true },
+        },
+        orderItems: {
+          select: { quantity: true, product: { select: { name: true } } },
+        },
+      },
+    });
+
+    return orders;
+  }),
 });
