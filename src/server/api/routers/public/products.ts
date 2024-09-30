@@ -24,13 +24,13 @@ export const productsRouter = createTRPCRouter({
     .input(
       z.object({ take: z.number().default(9), skip: z.number().default(0) }),
     )
-    .query(async ({ ctx /*input*/ }) => {
+    .query(async ({ ctx, input }) => {
       const data = await ctx.db.product.findMany({
         where: { stock: { gt: 0 } },
         orderBy: { name: "asc" },
         include: { category: { select: { name: true, slug: true } } },
-        // take: input.take,
-        // skip: input.skip,
+        take: input.take,
+        skip: input.skip,
       });
       if (!data) throw new TRPCError({ code: "NOT_FOUND" });
 
@@ -66,8 +66,8 @@ export const productsRouter = createTRPCRouter({
       const data = await ctx.db.product.findMany({
         where: { category: { slug: input.slug }, stock: { gt: 0 } },
         include: { category: { select: { name: true, slug: true } } },
-        // take: input.take,
-        // skip: input.skip,
+        take: input.take,
+        skip: input.skip,
       });
       if (!data) throw new TRPCError({ code: "NOT_FOUND" });
       const products = filterProductsForPublic(data);

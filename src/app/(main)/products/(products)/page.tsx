@@ -17,6 +17,8 @@ export default async function ProductsPage({
 }: {
   searchParams?: { q: string };
 }) {
+  const ITEMS_NUM = 40;
+
   const categories = await api.public.categories.getAllCategories();
 
   const categorySlug = searchParams?.q;
@@ -24,11 +26,11 @@ export default async function ProductsPage({
   const products = categorySlug
     ? await api.public.products.getProductsByCategorySlug({
         slug: categorySlug,
-        take: 9,
+        take: ITEMS_NUM,
         skip: 0,
       })
     : await api.public.products.getAllProductsWithPagination({
-        take: 9,
+        take: ITEMS_NUM,
         skip: 0,
       });
 

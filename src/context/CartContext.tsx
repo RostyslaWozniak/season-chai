@@ -11,6 +11,7 @@ type Product = RouterOutputs["public"]["products"]["getAllProducts"][number];
 type CartContext = {
   cartItems: CartItem[] | undefined;
   isLoadingCartItems: boolean;
+  products: Product[] | undefined;
   totalItems: number;
   totalPrice: number;
   handleAddOneToCart: (id: string) => void;
@@ -110,6 +111,7 @@ export default function CartProvider({ children }: React.PropsWithChildren) {
       value={{
         cartItems,
         isLoadingCartItems,
+        products,
         totalItems,
         totalPrice,
         handleRemoveOneFromCart,
