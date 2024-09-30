@@ -63,7 +63,6 @@ export default async function OrdersPage() {
                     <TableCell>
                       <PriceView
                         price={Number(item.totalPrice)}
-                        salePrice={Number(item.totalPrice)}
                         className="items-start justify-center"
                       />
                     </TableCell>

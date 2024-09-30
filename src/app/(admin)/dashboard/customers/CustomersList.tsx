@@ -68,7 +68,11 @@ export const CustomersList = () => {
                     {formatPrice(
                       cart_items.reduce(
                         (acc, item) =>
-                          acc + item.quantity * Number(item.products.price),
+                          acc +
+                          item.quantity *
+                            Number(
+                              item.products.salePrice ?? item.products.price,
+                            ),
                         0,
                       ),
                     )}
