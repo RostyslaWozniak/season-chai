@@ -36,7 +36,7 @@ export const HeroSection = () => {
               premium teas from around the globe. From soothing herbal blends to
               invigorating black teas, find your perfect cup.
             </p>
-            <div className="flex flex-col justify-center gap-4 sm:flex-row md:justify-start">
+            <div className="flex justify-center gap-4 sm:flex-row md:justify-start">
               <Link
                 href="/products"
                 className={cn(

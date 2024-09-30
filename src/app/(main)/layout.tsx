@@ -1,4 +1,5 @@
 import Footer from "@/components/main/Footer";
+import { MobileNavbar } from "@/components/MobileNavbar";
 
 export default async function RootLayout({
   children,
@@ -7,6 +8,7 @@ export default async function RootLayout({
     <>
       <div className="grow">{children}</div>
       <Footer />
+      <MobileNavbar />
     </>
   );
 }

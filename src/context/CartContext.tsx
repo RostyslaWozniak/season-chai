@@ -10,7 +10,7 @@ type CartItem = RouterOutputs["private"]["cart"]["getCartItems"][number];
 type Product = RouterOutputs["public"]["products"]["getAllProducts"][number];
 
 type CartContext = {
-  cartItems: CartItem[] | undefined;
+  cartItems: CartItem[];
   isLoadingCartItems: boolean;
   products: Product[];
   totalItems: number;
@@ -25,7 +25,7 @@ const CartContext = createContext<CartContext | null>(null);
 export default function CartProvider({ children }: React.PropsWithChildren) {
   const { products } = useProducts();
 
-  const [cartItems, setCartItems] = useState<CartItem[] | undefined>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const { user } = useSession();
 
@@ -95,7 +95,7 @@ export default function CartProvider({ children }: React.PropsWithChildren) {
   };
 
   useEffect(() => {
-    setCartItems(serverCartItems);
+    setCartItems(serverCartItems ?? []);
   }, [serverCartItems]);
 
   return (

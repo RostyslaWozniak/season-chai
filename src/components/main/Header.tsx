@@ -13,7 +13,7 @@ export default async function Header() {
       <div className="mx-auto flex flex-wrap items-center justify-between gap-5 px-5 py-2 lg:px-12">
         <Link
           href="/"
-          className="flex items-end text-2xl font-bold text-primary"
+          className="flex items-center text-2xl font-bold text-primary md:items-end"
         >
           <img src="/favicon.svg" alt="logo" className="mr-2 h-10 w-10" />
           <p className="[text-shadow:_0.5px_0.5px_0_hsl(var(--card))]">
@@ -22,7 +22,9 @@ export default async function Header() {
         </Link>
         {user ? (
           <div className="flex items-center gap-5">
-            <CartSheet />
+            <div className="hidden md:block">
+              <CartSheet />
+            </div>
             <UserButton user={user} />
           </div>
         ) : (
