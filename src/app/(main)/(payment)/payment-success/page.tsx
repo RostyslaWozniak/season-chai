@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { formatPrice } from "@/helpers";
 import { cn } from "@/lib/utils";
-import { CheckCircle, Package, Calendar, CreditCard } from "lucide-react";
+import { CheckCircle, Calendar, CreditCard } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -36,15 +36,6 @@ export default function PaymentSuccessPage({
             Thank you for your purchase. Your order has been processed.
           </p>
           <div className="space-y-4">
-            <div className="flex items-center justify-between border-b border-gray-200 py-3">
-              <div className="flex items-center space-x-2">
-                <Package className="h-5 w-5 text-gray-500" />
-                <span className="font-medium text-gray-700">Order Number</span>
-              </div>
-              <span className="font-mono text-sm text-gray-800">
-                #123456789
-              </span>
-            </div>
             <div className="flex items-center justify-between border-b border-gray-200 py-3">
               <div className="flex items-center space-x-2">
                 <Calendar className="h-5 w-5 text-gray-500" />
