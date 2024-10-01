@@ -16,7 +16,10 @@ export const PriceView = ({
     <div
       className={cn(
         "flex flex-col items-center",
-        { "flex-row gap-2 text-xl font-bold": horizontal },
+        {
+          "flex-row gap-2 text-xl font-bold max-[400px]:flex-col max-[400px]:gap-0":
+            horizontal,
+        },
         className,
       )}
     >

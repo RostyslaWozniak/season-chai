@@ -85,12 +85,15 @@ export const ProductCard = ({ product }: ProductCardProps) => {
           </div>
         </CardContent>
 
-        <CardFooter className="flex min-h-14 items-center justify-between border-t px-4 py-0">
-          <PriceView
-            price={product.price}
-            salePrice={product.salePrice}
-            horizontal
-          />
+        <CardFooter className="flex min-h-14 items-center justify-between border-t px-4 py-1">
+          <div className="">
+            <PriceView
+              price={product.price}
+              salePrice={product.salePrice}
+              horizontal
+            />
+          </div>
+
           <CartBtn productId={product.id} />
         </CardFooter>
       </Card>
