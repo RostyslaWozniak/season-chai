@@ -11,6 +11,8 @@ import { InfoCard } from "./InfoCard";
 import { PriceView } from "./PriceView";
 import { Button } from "../ui/button";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
+import { TooltipWrapper } from "../TooltipWrapper";
+import { Info } from "lucide-react";
 
 type SmallProductCardProps = {
   product: RouterOutputs["public"]["products"]["getProductsByCategorySlug"][number];
@@ -63,14 +65,20 @@ export const SmallProductCard = ({ product }: SmallProductCardProps) => {
             <CartBtn productId={product.id} />
           </div>
         </div>
-        <Button
-          size="icon"
-          variant="ghost"
-          className="absolute right-1 top-1 grid h-8 w-8 place-items-center"
-          onClick={() => setIsInfoOpen(true)}
+        <TooltipWrapper
+          label={`Info About Product`}
+          icon={Info}
+          className="hidden md:flex"
         >
-          <DotsVerticalIcon className="h-5 w-5" />
-        </Button>
+          <Button
+            size="icon"
+            variant="ghost"
+            className="absolute right-1 top-1 grid h-8 w-8 place-items-center"
+            onClick={() => setIsInfoOpen(true)}
+          >
+            <DotsVerticalIcon className="h-5 w-5" />
+          </Button>
+        </TooltipWrapper>
       </Card>
     </>
   );
