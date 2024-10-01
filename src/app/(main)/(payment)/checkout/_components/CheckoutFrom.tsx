@@ -10,7 +10,6 @@ import {
   Elements,
 } from "@stripe/react-stripe-js";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   Card,
@@ -125,7 +124,7 @@ function Form({ totalPrice, clientSecret, items }: CheckoutFormProps) {
             }
           >
             {loading ? (
-              <Loader2 className="animate-spin" />
+              <LeafLoader className="text-white" size={20} />
             ) : (
               `Pay ${formatPrice(totalPrice)}`
             )}
