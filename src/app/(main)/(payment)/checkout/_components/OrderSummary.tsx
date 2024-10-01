@@ -85,7 +85,7 @@ export const OrderSummary = async ({
           </Table>
         </ScrollArea>
       </CardContent>
-      <CardFooter className="flex flex-col items-end px-1 py-2 shadow-[0_-4px_5px_-2px_rgba(0,0,0,0.1)] sm:px-8">
+      <CardFooter className="relative flex flex-col items-end px-1 py-2 shadow-[0_-4px_10px_-2px_rgba(0,0,0,0.1)] sm:px-8">
         <div className="grid grid-cols-2 gap-x-2 text-end">
           {tax > 0 && (
             <>
