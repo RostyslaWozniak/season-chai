@@ -30,16 +30,14 @@ export const InfoCard = ({
           "hidden md:grid": hideImageOnMobile,
         })}
       >
-        <div className="aspect-square">
-          <Image
-            width={500}
-            height={500}
-            className="mx-auto rounded-lg object-cover"
-            src={product.imageUrl}
-            alt={`Cover image of ${product.name}`}
-            priority
-          />
-        </div>
+        <Image
+          width={500}
+          height={500}
+          className="mx-auto aspect-square rounded-lg object-cover"
+          src={product.imageUrl}
+          alt={`Cover image of ${product.name}`}
+          priority
+        />
       </div>
 
       <div className="col-span-3 space-y-4 md:self-center">
