@@ -20,6 +20,16 @@ export const metadata: Metadata = {
   },
   description: "The e-commerce platform for tea products",
   icons: [{ rel: "icon", url: "/favicon.svg" }],
+  openGraph: {
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Season Chai",
+      },
+    ],
+  },
 };
 
 export default async function RootLayout({
