@@ -1,9 +1,5 @@
 "use client";
 
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { InfoIcon } from "lucide-react";
-import { DropdownWrapper } from "../DropdownWrapper";
-import IconMenu from "../IconMenu";
 import CartBtn from "./CartBtn";
 import { Card, CardTitle } from "../ui/card";
 import Image from "next/image";
@@ -13,6 +9,8 @@ import Link from "next/link";
 import { DialogWrapper } from "../DialogWrapper";
 import { InfoCard } from "./InfoCard";
 import { PriceView } from "./PriceView";
+import { Button } from "../ui/button";
+import { DotsVerticalIcon } from "@radix-ui/react-icons";
 
 type SmallProductCardProps = {
   product: RouterOutputs["public"]["products"]["getProductsByCategorySlug"][number];
@@ -33,10 +31,10 @@ export const SmallProductCard = ({ product }: SmallProductCardProps) => {
       </DialogWrapper>
 
       <Card
-        className="relative mx-auto grid h-full w-full max-w-[500px] grid-cols-2 overflow-hidden duration-300 hover:shadow-md lg:grid-cols-3"
+        className="relative mx-auto flex h-full w-full max-w-[450px] overflow-hidden duration-300 hover:shadow-md"
         key={product.id}
       >
-        <div className="relative">
+        <div className="relative aspect-square w-32 max-w-32">
           <Link key={product.id} href={`/products/${product.id}`}>
             <Image
               width={150}
@@ -47,10 +45,10 @@ export const SmallProductCard = ({ product }: SmallProductCardProps) => {
             />
           </Link>
         </div>
-        <div className="group flex flex-col items-start justify-center gap-3 p-2 sm:p-4 lg:col-span-2">
+        <div className="group flex flex-col justify-center gap-3 p-2 sm:p-4">
           <Link key={product.id} href={`/products/${product.id}`}>
             <div className="flex grow flex-col justify-center">
-              <CardTitle className="text-xl group-hover:underline">
+              <CardTitle className="pr-4 text-xl md:group-hover:underline">
                 {product.name}
               </CardTitle>
               <PriceView
@@ -61,19 +59,18 @@ export const SmallProductCard = ({ product }: SmallProductCardProps) => {
               />
             </div>
           </Link>
-          <CartBtn productId={product.id} />
+          <div className="">
+            <CartBtn productId={product.id} />
+          </div>
         </div>
-        <div className="absolute right-0 top-1">
-          <DropdownWrapper vertical className="w-min">
-            <DropdownMenuItem onClick={() => setIsInfoOpen(true)}>
-              <IconMenu
-                icon={InfoIcon}
-                text="More Information"
-                className="text-nowrap text-muted-foreground"
-              />
-            </DropdownMenuItem>
-          </DropdownWrapper>
-        </div>
+        <Button
+          size="icon"
+          variant="ghost"
+          className="absolute right-1 top-1 grid h-8 w-8 place-items-center"
+          onClick={() => setIsInfoOpen(true)}
+        >
+          <DotsVerticalIcon className="h-5 w-5" />
+        </Button>
       </Card>
     </>
   );

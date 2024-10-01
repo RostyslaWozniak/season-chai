@@ -5,7 +5,6 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import IconMenu from "@/components/IconMenu";
 import { DialogWrapper } from "../DialogWrapper";
 import { InfoCard } from "./InfoCard";
 import { useState } from "react";
@@ -16,6 +15,7 @@ import CartBtn from "./CartBtn";
 import { PriceView } from "./PriceView";
 import { type RouterOutputs } from "@/trpc/react";
 import { DotsVerticalIcon } from "@radix-ui/react-icons";
+import { Button } from "../ui/button";
 
 type ProductCardProps = {
   product: RouterOutputs["public"]["products"]["getOneProduct"];
@@ -70,25 +70,14 @@ export const ProductCard = ({ product }: ProductCardProps) => {
               {product.description}
             </p>
           </Link>
-          <div
-            className="absolute right-0 top-3"
+          <Button
+            size="icon"
+            variant="ghost"
+            className="absolute right-1 top-1 grid h-8 w-8 place-items-center"
             onClick={() => setIsInfoOpen(true)}
           >
-            <IconMenu
-              icon={DotsVerticalIcon}
-              className="scale-[1.3] text-nowrap"
-              iconSize={80}
-            />
-            {/* <DropdownWrapper vertical className="w-min">
-              <DropdownMenuItem onClick={() => setIsInfoOpen(true)}>
-                <IconMenu
-                  icon={InfoIcon}
-                  text="More Information"
-                  className="text-nowrap text-muted-foreground"
-                />
-              </DropdownMenuItem>
-            </DropdownWrapper> */}
-          </div>
+            <DotsVerticalIcon className="h-5 w-5" />
+          </Button>
         </CardContent>
 
         <CardFooter className="flex min-h-14 items-center justify-between border-t px-4 py-1">
