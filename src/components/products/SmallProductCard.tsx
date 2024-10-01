@@ -36,7 +36,7 @@ export const SmallProductCard = ({ product }: SmallProductCardProps) => {
         className="relative mx-auto flex h-full w-full max-w-[450px] overflow-hidden duration-300 hover:shadow-md"
         key={product.id}
       >
-        <div className="relative aspect-square w-32 max-w-32">
+        <div className="relative h-32 min-h-32 w-32 min-w-32">
           <Link key={product.id} href={`/products/${product.id}`}>
             <Image
               width={150}
