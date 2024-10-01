@@ -30,6 +30,9 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    images: ["/og.png"],
+  },
 };
 
 export default async function RootLayout({
