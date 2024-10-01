@@ -25,10 +25,10 @@ const features = [
 export const HeroSection = () => {
   return (
     <div className="relative overflow-hidden bg-gradient-to-r from-primary/10 to-primary/20">
-      <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:pb-24 sm:pt-32 lg:px-8">
+      <div className="relative mx-auto max-w-7xl px-4 pb-24 pt-32 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-12 md:grid-cols-2">
           <div className="text-center md:text-left">
-            <h1 className="mb-6 text-4xl font-extrabold tracking-tight text-primary sm:text-5xl lg:text-6xl">
+            <h1 className="mb-6 text-5xl font-extrabold tracking-tight text-primary md:text-6xl">
               Discover the World of Season Chai
             </h1>
             <p className="mx-auto mb-8 max-w-2xl text-xl text-muted-foreground md:mx-0">
@@ -36,12 +36,12 @@ export const HeroSection = () => {
               premium teas from around the globe. From soothing herbal blends to
               invigorating black teas, find your perfect cup.
             </p>
-            <div className="flex justify-center gap-4 sm:flex-row md:justify-start">
+            <div className="flex flex-wrap justify-center gap-4 sm:flex-row md:justify-start">
               <Link
                 href="/products"
                 className={cn(
                   buttonVariants({ variant: "default", size: "lg" }),
-                  "px-8 text-lg",
+                  "flex-1 px-8 text-lg sm:flex-none",
                 )}
               >
                 Shop Now
@@ -51,7 +51,7 @@ export const HeroSection = () => {
                 href="/products?q=gift-sets"
                 className={cn(
                   buttonVariants({ variant: "outline", size: "lg" }),
-                  "px-8 text-lg",
+                  "flex-1 px-8 text-lg sm:flex-none",
                 )}
               >
                 Gift Sets
@@ -59,7 +59,7 @@ export const HeroSection = () => {
               </Link>
             </div>
           </div>
-          <div className="relative">
+          <div className="relative hidden md:block">
             <div className="absolute -right-10 top-1/2 w-72 -translate-y-1/2 transform rounded-full bg-primary/10 sm:h-[450px] sm:w-[450px]"></div>
             <Image
               width={450}
