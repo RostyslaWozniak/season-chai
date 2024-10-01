@@ -33,7 +33,7 @@ export default async function OrdersPage() {
   return (
     <div className="container mx-auto max-w-7xl px-2 py-20">
       {orders.length !== 0 ? (
-        <Card className="mx-auto flex w-full max-w-[700px] flex-col px-2">
+        <Card className="mx-auto flex w-full max-w-[700px] flex-col px-0">
           <CardHeader>
             <CardTitle className="text-xl font-bold">Your Orders</CardTitle>
           </CardHeader>
@@ -71,11 +71,8 @@ export default async function OrdersPage() {
               </TableBody>
             </Table>
           </CardContent>
-          <CardFooter className="flex flex-col items-end px-1 py-4 shadow-[0_-4px_5px_-2px_rgba(0,0,0,0.1)] sm:px-8">
-            <Link
-              href="/products"
-              className={cn(buttonVariants({ size: "lg" }), "text-lg")}
-            >
+          <CardFooter className="flex flex-col items-end px-2 py-4 shadow-[0_-4px_5px_-2px_rgba(0,0,0,0.1)] sm:px-8">
+            <Link href="/products" className={cn(buttonVariants(), "text-lg")}>
               <ShoppingBag className="mr-2 h-6 w-6" /> Go Shopping
             </Link>
           </CardFooter>
