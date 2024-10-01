@@ -24,7 +24,7 @@ export const InfoCard = ({
   lowStockAlertLevel?: number;
 }) => {
   return (
-    <div className="flex grid-cols-5 flex-col gap-8 p-4 py-4 md:grid">
+    <div className="flex grid-cols-5 flex-col gap-8 p-4 pb-20 pt-4 md:grid md:pb-4">
       <div
         className={cn("col-span-2 w-full items-center justify-center md:flex", {
           "hidden md:grid": hideImageOnMobile,
