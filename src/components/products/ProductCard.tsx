@@ -5,10 +5,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
-import { DropdownWrapper } from "@/components/DropdownWrapper";
 import IconMenu from "@/components/IconMenu";
-import { InfoIcon } from "lucide-react";
 import { DialogWrapper } from "../DialogWrapper";
 import { InfoCard } from "./InfoCard";
 import { useState } from "react";
@@ -18,6 +15,7 @@ import { TagLink } from "../TagLink";
 import CartBtn from "./CartBtn";
 import { PriceView } from "./PriceView";
 import { type RouterOutputs } from "@/trpc/react";
+import { DotsVerticalIcon } from "@radix-ui/react-icons";
 
 type ProductCardProps = {
   product: RouterOutputs["public"]["products"]["getOneProduct"];
@@ -72,8 +70,16 @@ export const ProductCard = ({ product }: ProductCardProps) => {
               {product.description}
             </p>
           </Link>
-          <div className="absolute right-0 top-1">
-            <DropdownWrapper vertical className="w-min">
+          <div
+            className="absolute right-0 top-3"
+            onClick={() => setIsInfoOpen(true)}
+          >
+            <IconMenu
+              icon={DotsVerticalIcon}
+              className="scale-[1.3] text-nowrap"
+              iconSize={80}
+            />
+            {/* <DropdownWrapper vertical className="w-min">
               <DropdownMenuItem onClick={() => setIsInfoOpen(true)}>
                 <IconMenu
                   icon={InfoIcon}
@@ -81,7 +87,7 @@ export const ProductCard = ({ product }: ProductCardProps) => {
                   className="text-nowrap text-muted-foreground"
                 />
               </DropdownMenuItem>
-            </DropdownWrapper>
+            </DropdownWrapper> */}
           </div>
         </CardContent>
 

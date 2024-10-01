@@ -1,9 +1,8 @@
 import { cn } from "@/lib/utils";
-import { type LucideIcon } from "lucide-react";
 
 interface MenuIconProps {
-  icon: LucideIcon;
-  text: string;
+  icon: React.ElementType;
+  text?: string;
   className?: string;
   iconSize?: number;
 }
