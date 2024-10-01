@@ -25,13 +25,17 @@ export function MobileNavbar() {
             href="/products"
             icon={<ShoppingBag className="h-6 w-6" />}
             label="Products"
-            isActive={pathname === "/products" && !searchParams.get("q")}
+            isActive={
+              pathname === "/products" && searchParams.get("q") !== "gift-sets"
+            }
           />
           <NavItem
             href="/products?q=gift-sets"
             icon={<Gift className="h-6 w-6" />}
             label="Gifts"
-            isActive={pathname === "/products" && !!searchParams.get("q")}
+            isActive={
+              pathname === "/products" && searchParams.get("q") === "gift-sets"
+            }
           />
 
           <NavItem
