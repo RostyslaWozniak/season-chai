@@ -16,13 +16,7 @@ export default async function Image({ params }: { params: { id: string } }) {
   });
   return new ImageResponse(
     (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
+      <div tw="w-full h-full flex flex-col justify-center items-center bg-white">
         <img
           tw="object-cover object-center h-full"
           src={product?.imageUrl}
