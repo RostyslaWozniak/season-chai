@@ -1,9 +1,6 @@
-/* eslint-disable @next/next/no-img-element */
 import { ImageResponse } from "next/og";
 
-export const size = { width: 1200, height: 630 };
-
-export const contentType = "image/png";
+export const runtime = "edge";
 
 export default async function Image() {
   return new ImageResponse(
@@ -16,9 +13,9 @@ export default async function Image() {
         }}
       >
         <img
-          src="/opengraph-image.png"
+          src="./opengraph-image.png"
           height="100"
-          alt="Season Chai Open Graph Image"
+          alt="Season Chai OpenGraph Image"
         />
       </div>
     ),
