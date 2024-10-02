@@ -14,12 +14,24 @@ export default async function Image({ params }: { params: { id: string } }) {
     where: { id: params.id },
     select: { imageUrl: true, name: true },
   });
+  if (!product)
+    return new ImageResponse(
+      (
+        <div tw="w-full h-full flex flex-col justify-center items-center bg-white">
+          <img
+            tw="object-cover object-center h-full"
+            src="/opengraph-image.png"
+            alt="Season Chai OpenGraph Image"
+          />
+        </div>
+      ),
+    );
   return new ImageResponse(
     (
       <div tw="w-full h-full flex flex-col justify-center items-center bg-white">
         <img
           tw="object-cover object-center h-full"
-          src={product?.imageUrl ?? "/opengraph-image.png"}
+          src={product?.imageUrl}
           alt={product?.name}
         />
       </div>
