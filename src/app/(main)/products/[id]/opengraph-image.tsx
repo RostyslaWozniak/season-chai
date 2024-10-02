@@ -1,5 +1,13 @@
+import { getAllProducts } from "@/server/actions/products";
 import { db } from "@/server/db";
 import { ImageResponse } from "next/og";
+
+export async function generateStaticParams() {
+  const products = await getAllProducts();
+  return products.map((product) => ({
+    id: product.id,
+  }));
+}
 
 export default async function Image({ params }: { params: { id: string } }) {
   const product = await db.product.findUnique({
