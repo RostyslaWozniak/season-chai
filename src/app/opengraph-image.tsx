@@ -13,7 +13,7 @@ export default async function Image() {
         }}
       >
         <img
-          src="./opengraph-image.png"
+          src="/opengraph-image.png"
           height="100"
           alt="Season Chai OpenGraph Image"
         />

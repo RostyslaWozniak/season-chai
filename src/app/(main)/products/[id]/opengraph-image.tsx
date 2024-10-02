@@ -19,7 +19,7 @@ export default async function Image({ params }: { params: { id: string } }) {
       <div tw="w-full h-full flex flex-col justify-center items-center bg-white">
         <img
           tw="object-cover object-center h-full"
-          src={product?.imageUrl}
+          src={product?.imageUrl ?? "/opengraph-image.png"}
           alt={product?.name}
         />
       </div>
