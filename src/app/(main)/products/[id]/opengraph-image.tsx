@@ -23,7 +23,7 @@ export default async function Image({ params }: { params: { id: string } }) {
           justifyContent: "center",
         }}
       >
-        <img src={product?.imageUrl} height="100" alt={product?.name} />
+        <img src={product?.imageUrl} alt={product?.name} />
       </div>
     ),
   );
