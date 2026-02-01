@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "@/styles/globals.css";
+
+import { Toaster } from "@/components/shadcn-ui/sonner";
+import { PrivateHeader } from "@/components/header/private-header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,9 +28,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} dark antialiased`}
       >
-        {children}
+        <PrivateHeader />
+        <main>{children}</main>
+        <Toaster richColors position="top-center" />
       </body>
     </html>
   );
