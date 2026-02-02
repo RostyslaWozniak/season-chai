@@ -17,7 +17,7 @@ export function SectionHeader({
   heading?: typeof H2 | typeof H3;
 }) {
   return (
-    <div className={cn("mx-auto mb-6 text-center md:mb-12", className)}>
+    <div className={cn("mx-auto mb-6 md:mb-12", className)}>
       <Heading className={cn("mb-3 md:mb-6", titleClassName)}>{title}</Heading>
       {subtitle && (
         <p className={cn("text-lg md:text-xl", subtitleClassName)}>
