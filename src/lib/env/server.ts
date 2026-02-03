@@ -18,6 +18,9 @@ export const env = createEnv({
     // google
     GOOGLE_AUTH_CLIENT_ID: z.string().min(1),
     GOOGLE_AUTH_CLIENT_SECRET: z.string().min(1),
+    // telegram
+    TELEGRAM_ACCESS_TOKEN: z.string().min(1),
+    TELEGRAM_CHAT_ID: z.string().min(1),
   },
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
@@ -35,5 +38,9 @@ export const env = createEnv({
     // google
     GOOGLE_AUTH_CLIENT_ID: process.env.GOOGLE_AUTH_CLIENT_ID,
     GOOGLE_AUTH_CLIENT_SECRET: process.env.GOOGLE_AUTH_CLIENT_SECRET,
+
+    // telegram
+    TELEGRAM_ACCESS_TOKEN: process.env.TELEGRAM_ACCESS_TOKEN,
+    TELEGRAM_CHAT_ID: process.env.TELEGRAM_CHAT_ID,
   },
 });
