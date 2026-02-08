@@ -1,26 +1,31 @@
 "use client";
 
 import { LoadingButton } from "@/components/ui/loading-button";
-import { del } from "@vercel/blob";
 import { XIcon } from "lucide-react";
 import Image from "next/image";
 import { useTransition } from "react";
 import { toast } from "sonner";
+import { deleteImageAction } from "../actions/delete-image.action";
+import { useRouter } from "next/navigation";
 
 export function ImageItem({
   src,
+  title,
   priority,
 }: {
   src: string;
+  title: string;
   priority: boolean;
 }) {
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   function deleteImage() {
-    startTransition(() => {
-      del(src);
+    startTransition(async () => {
+      await deleteImageAction(src);
 
       startTransition(() => {
         toast.success("Image deleted");
+        router.refresh();
       });
     });
   }
@@ -42,6 +47,7 @@ export function ImageItem({
       >
         <XIcon />
       </LoadingButton>
+      <p className="max-w-40 overflow-hidden text-nowrap">{title}</p>
     </div>
   );
 }
