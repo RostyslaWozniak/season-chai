@@ -12,6 +12,20 @@ export function LoadingButton({
   className,
   ...props
 }: LoadingButtonProps) {
+  if (props.size === "icon") {
+    return (
+      <Button
+        disabled={loading || disabled}
+        className={cn(
+          "relative flex items-center gap-2 transition-none",
+          className,
+        )}
+        {...props}
+      >
+        {loading ? <Loader2 className="size-5 animate-spin" /> : props.children}
+      </Button>
+    );
+  }
   return (
     <Button
       disabled={loading || disabled}
